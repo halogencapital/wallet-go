@@ -13,6 +13,7 @@ import (
 
 // TODO: update this URL to sdk server endpoint
 const endpoint string = "https://external-api.wallet.halogen.my"
+const version string = "0.0.1"
 
 type Error struct {
 	Code    int    `json:"code"`
@@ -48,6 +49,7 @@ func (c *Client) query(ctx context.Context, name string, input interface{}, outp
 		return err
 	}
 	jsonBuffer.Reset()
+	req.Header.Set("User-Agent", fmt.Sprintf("wallet/%s lang/go", version))
 
 	o := c.options
 	keyID := ""
