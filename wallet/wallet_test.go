@@ -10,31 +10,28 @@ import (
 )
 
 const (
-	testKeyID    = "3394eb8831ff50634ad973cda5b93fc0b36bd885"
-	testClientID = "5b153c9a5d8b0467a9ba887a1ff4dfe209c3d6f4"
+	testKeyID = "f42018241cb0ce8ac4f82d7049fa63db2caaad9a"
 )
 
 func TestClientSimple(t *testing.T) {
-	c := New()
+	c := New(&Options{Debug: true})
 	prv, _ := os.ReadFile(".key/ec_private_key.pem")
 	c.SetCredentials(testKeyID, prv)
-	output, err := c.ListClientAccounts(context.Background(), &ListClientAccountsInput{
-		ClientID: testClientID,
-	})
+	output, err := c.ListClientAccounts(context.Background(), &ListClientAccountsInput{})
 	if err != nil {
 		panic(err)
 	}
 	b, _ := json.MarshalIndent(output, "", "\t")
 	fmt.Println(string(b))
 
-	output, err = c.ListClientAccounts(context.Background(), &ListClientAccountsInput{
-		ClientID: testClientID,
-	})
-	if err != nil {
-		panic(err)
-	}
-	b, _ = json.MarshalIndent(output, "", "\t")
-	fmt.Println(string(b))
+	// output, err = c.ListClientAccounts(context.Background(), &ListClientAccountsInput{
+	// 	ClientID: testClientID,
+	// })
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// b, _ = json.MarshalIndent(output, "", "\t")
+	// fmt.Println(string(b))
 }
 
 func TestClientWithCredentialsLoaderFunc(t *testing.T) {
