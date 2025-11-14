@@ -45,9 +45,7 @@ func TestClientWithCredentialsLoaderFunc(t *testing.T) {
 		},
 		Debug: true,
 	})
-	output, err := c.ListClientAccounts(context.Background(), &ListClientAccountsInput{
-		ClientID: testClientID,
-	})
+	output, err := c.ListClientAccounts(context.Background(), &ListClientAccountsInput{})
 	if err != nil {
 		panic(err)
 	}
@@ -66,9 +64,9 @@ func TestClientWithCredentialsLoaderFunc(t *testing.T) {
 
 func TestClientWithErrorCasting(t *testing.T) {
 	c := New()
-	c.SetCredentials(testKeyID, nil)
+	prv, _ := os.ReadFile(".key/ec_private_key.pem")
+	c.SetCredentials(testKeyID, prv)
 	output, err := c.ListClientAccounts(context.Background(), &ListClientAccountsInput{
-		ClientID:   testClientID,
 		AccountIDs: []string{"invalid_account_id"},
 	})
 	if err != nil {

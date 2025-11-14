@@ -72,7 +72,15 @@ curl -X "POST" "https://external-api.wallet.halogen.my/command" \
      -H 'Authorization: Bearer [JSON Web Token]' \
      -d $'{
   "name": "invest",
-  "payloadJSON": "{\\"clientId\\":\\"5b153c9a5d8b0467a9ba887a1ff4dfe209c3d6f4\\",\\"accountId\\":\\"2308001002\\",\\"fundId\\":\\"1d3ede3d8023fb76a6b73ab2972bdc28b73cc549\\",\\"fundClassSequence\\":1,\\"amount\\":1000,\\"consentFundIM\\":true,\\"consentHighRisk\\":false}"
+  "payload": {
+    "clientId":"5b153c9a5d8b0467a9ba887a1ff4dfe209c3d6f4",
+    "accountId":"2308001002",
+    "fundId":"1d3ede3d8023fb76a6b73ab2972bdc28b73cc549",
+    "fundClassSequence":1,
+    "amount":1000,
+    "consentFundIM":true,
+    "consentHighRisk":false
+    }
 }'
 ```
 

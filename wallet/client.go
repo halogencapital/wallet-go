@@ -24,9 +24,8 @@ func (e Error) Error() string {
 }
 
 type queryInput struct {
-	Name        string      `json:"name"`
-	Payload     interface{} `json:"payload"`
-	PayloadJSON string      `json:"payloadJSON"`
+	Name    string      `json:"name"`
+	Payload interface{} `json:"payload"`
 }
 
 func (c *Client) query(ctx context.Context, name string, input interface{}, output interface{}) error {
@@ -37,7 +36,6 @@ func (c *Client) query(ctx context.Context, name string, input interface{}, outp
 	body := queryInput{
 		Name:    name,
 		Payload: input,
-		// PayloadJSON: strings.TrimRight(jsonBuffer.String(), "\n"),
 	}
 	jsonBuffer.Reset()
 
