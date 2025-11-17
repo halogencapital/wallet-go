@@ -32,6 +32,8 @@ type queryInput struct {
 }
 
 func (c *Client) query(ctx context.Context, name string, input interface{}, output interface{}) error {
+	// retriedCount increments on >= 500 errors
+	retriedCount := 0
 retry:
 	var jsonBuffer bytes.Buffer
 	if err := json.NewEncoder(&jsonBuffer).Encode(input); err != nil {
@@ -98,28 +100,29 @@ retry:
 	}
 	keyID = ""
 	req = nil
-	if resp.StatusCode >= 500 {
-		return Error{
-			StatusCode: resp.StatusCode,
-			Message:    resp.Status,
-		}
-	}
 	if resp.StatusCode >= 400 {
 		sdkErr := Error{
 			StatusCode: resp.StatusCode,
 		}
 		if err := json.NewDecoder(resp.Body).Decode(&sdkErr); err != nil {
-			return Error{
-				StatusCode: resp.StatusCode,
-				Message:    resp.Status,
-			}
+			return sdkErr
 		}
-		if sdkErr.StatusCode == http.StatusTooManyRequests {
+		// rate-limited
+		if resp.StatusCode == http.StatusTooManyRequests {
 			i, err := strconv.ParseInt(resp.Header.Get("Retry-After"), 10, 64)
 			if err != nil {
 				return sdkErr
 			}
 			time.Sleep(time.Duration(i) * time.Second)
+			goto retry
+		}
+		// retry server error
+		if resp.StatusCode >= http.StatusInternalServerError {
+			if retriedCount >= c.options.MaxReadRetry-1 {
+				return sdkErr
+			}
+			retriedCount++
+			time.Sleep(c.options.RetryInterval)
 			goto retry
 		}
 		return sdkErr
