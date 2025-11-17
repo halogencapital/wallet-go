@@ -12,9 +12,11 @@ import (
 	"time"
 )
 
-// TODO: update this URL to sdk server endpoint
-const endpoint string = "https://external-api.wallet.halogen.my"
-const version string = "0.0.1"
+const (
+	endpoint  string = "https://external-api.wallet.halogen.my"
+	version   string = "0.0.1"
+	userAgent string = "wallet/" + version + " lang/go"
+)
 
 type Error struct {
 	StatusCode int    `json:"statusCode"`
@@ -54,7 +56,7 @@ retry:
 		return err
 	}
 	jsonBuffer.Reset()
-	req.Header.Set("User-Agent", fmt.Sprintf("wallet/%s lang/go", version))
+	req.Header.Set("User-Agent", userAgent)
 
 	o := c.options
 	keyID := ""
