@@ -231,13 +231,9 @@ type ListClientAccountsOutput struct {
 }
 
 // ListClientAccounts lists all the accounts associated with the client.
-func (c *Client) ListClientAccounts(ctx context.Context, input *ListClientAccountsInput) (*ListClientAccountsOutput, error) {
-	output := ListClientAccountsOutput{}
-	err := c.query(ctx, "list_client_accounts", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientAccounts(ctx context.Context, input *ListClientAccountsInput) (output *ListClientAccountsOutput, err error) {
+	err = c.query(ctx, "list_client_accounts", input, &output)
+	return output, err
 }
 
 type Address struct {
@@ -410,13 +406,9 @@ type GetClientProfileOutput struct {
 	Status string `json:"status,omitempty"`
 }
 
-func (c *Client) GetClientProfile(ctx context.Context, input *GetClientProfileInput) (*GetClientProfileOutput, error) {
-	output := GetClientProfileOutput{}
-	err := c.query(ctx, "get_client_profile", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientProfile(ctx context.Context, input *GetClientProfileInput) (output *GetClientProfileOutput, err error) {
+	err = c.query(ctx, "get_client_profile", input, &output)
+	return output, err
 }
 
 type Fund struct {
@@ -483,13 +475,9 @@ type GetFundOutput struct {
 	Fund *Fund `json:"fund,omitempty"`
 }
 
-func (c *Client) GetFund(ctx context.Context, input *GetFundInput) (*GetFundOutput, error) {
-	output := GetFundOutput{}
-	err := c.query(ctx, "get_fund", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetFund(ctx context.Context, input *GetFundInput) (output *GetFundOutput, err error) {
+	err = c.query(ctx, "get_fund", input, &output)
+	return output, err
 }
 
 type GetRequestByDuitNowEndToEndIDInput struct {
@@ -501,13 +489,9 @@ type GetRequestByDuitNowEndToEndIDOutput struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-func (c *Client) GetRequestByDuitNowEndToEndID(ctx context.Context, input *GetRequestByDuitNowEndToEndIDInput) (*GetRequestByDuitNowEndToEndIDOutput, error) {
-	output := GetRequestByDuitNowEndToEndIDOutput{}
-	err := c.query(ctx, "get_request_by_duitnow_endToEndId", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetRequestByDuitNowEndToEndID(ctx context.Context, input *GetRequestByDuitNowEndToEndIDInput) (output *GetRequestByDuitNowEndToEndIDOutput, err error) {
+	err = c.query(ctx, "get_request_by_duitnow_endToEndId", input, &output)
+	return output, err
 }
 
 type AllocationPerformance struct {
@@ -532,13 +516,9 @@ type GetClientAccountAllocationPerformanceOutput struct {
 	Performance []AllocationPerformance `json:"performance"`
 }
 
-func (c *Client) GetClientAccountAllocationPerformance(ctx context.Context, input *GetClientAccountAllocationPerformanceInput) (*GetClientAccountAllocationPerformanceOutput, error) {
-	output := GetClientAccountAllocationPerformanceOutput{}
-	err := c.query(ctx, "get_client_account_allocation_performance", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientAccountAllocationPerformance(ctx context.Context, input *GetClientAccountAllocationPerformanceInput) (output *GetClientAccountAllocationPerformanceOutput, err error) {
+	err = c.query(ctx, "get_client_account_allocation_performance", input, &output)
+	return output, err
 }
 
 type GetClientAccountStatementInput struct {
@@ -556,13 +536,9 @@ type GetClientAccountStatementOutput struct {
 	Bytes    []byte `json:"bytes,omitempty"`
 }
 
-func (c *Client) GetClientAccountStatement(ctx context.Context, input *GetClientAccountStatementInput) (*GetClientAccountStatementOutput, error) {
-	output := GetClientAccountStatementOutput{}
-	err := c.query(ctx, "get_client_account_statement", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientAccountStatement(ctx context.Context, input *GetClientAccountStatementInput) (output *GetClientAccountStatementOutput, err error) {
+	err = c.query(ctx, "get_client_account_statement", input, &output)
+	return output, err
 }
 
 type GetClientAccountRequestConfirmationInput struct {
@@ -577,13 +553,9 @@ type GetClientAccountRequestConfirmationOutput struct {
 	Bytes    []byte `json:"bytes,omitempty"`
 }
 
-func (c *Client) GetClientAccountRequestConfirmation(ctx context.Context, input *GetClientAccountRequestConfirmationInput) (*GetClientAccountRequestConfirmationOutput, error) {
-	output := GetClientAccountRequestConfirmationOutput{}
-	err := c.query(ctx, "get_client_account_request_confirmation", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientAccountRequestConfirmation(ctx context.Context, input *GetClientAccountRequestConfirmationInput) (output *GetClientAccountRequestConfirmationOutput, err error) {
+	err = c.query(ctx, "get_client_account_request_confirmation", input, &output)
+	return output, err
 }
 
 type GetClientReferralInput struct {
@@ -594,13 +566,9 @@ type GetClientReferralOutput struct {
 	ReferredClientsCount int    `json:"referredClientsCount"`
 }
 
-func (c *Client) GetClientReferral(ctx context.Context, input *GetClientReferralInput) (*GetClientReferralOutput, error) {
-	output := GetClientReferralOutput{}
-	err := c.query(ctx, "get_client_referral", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientReferral(ctx context.Context, input *GetClientReferralInput) (output *GetClientReferralOutput, err error) {
+	err = c.query(ctx, "get_client_referral", input, &output)
+	return output, err
 }
 
 type PolicyGroup struct {
@@ -627,13 +595,9 @@ type GetClientAccountRequestPolicyOutput struct {
 	Participants []PolicyParticipant `json:"participants"`
 }
 
-func (c *Client) GetClientAccountRequestPolicy(ctx context.Context, input *GetClientAccountRequestPolicyInput) (*GetClientAccountRequestPolicyOutput, error) {
-	output := GetClientAccountRequestPolicyOutput{}
-	err := c.query(ctx, "get_client_account_request_policy", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetClientAccountRequestPolicy(ctx context.Context, input *GetClientAccountRequestPolicyInput) (output *GetClientAccountRequestPolicyOutput, err error) {
+	err = c.query(ctx, "get_client_account_request_policy", input, &output)
+	return output, err
 }
 
 type ListFundsForSubscriptionInput struct {
@@ -644,13 +608,9 @@ type ListFundsForSubscriptionOutput struct {
 	Funds []Fund `json:"funds"`
 }
 
-func (c *Client) ListFundsForSubscription(ctx context.Context, input *ListFundsForSubscriptionInput) (*ListFundsForSubscriptionOutput, error) {
-	output := ListFundsForSubscriptionOutput{}
-	err := c.query(ctx, "list_funds_for_subscription", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListFundsForSubscription(ctx context.Context, input *ListFundsForSubscriptionInput) (output *ListFundsForSubscriptionOutput, err error) {
+	err = c.query(ctx, "list_funds_for_subscription", input, &output)
+	return output, err
 }
 
 type Balance struct {
@@ -684,13 +644,9 @@ type ListClientAccountBalanceOutput struct {
 	Balance []*Balance `json:"balance,omitempty"`
 }
 
-func (c *Client) ListClientAccountBalance(ctx context.Context, input *ListClientAccountBalanceInput) (*ListClientAccountBalanceOutput, error) {
-	output := ListClientAccountBalanceOutput{}
-	err := c.query(ctx, "list_client_account_balance", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientAccountBalance(ctx context.Context, input *ListClientAccountBalanceInput) (output *ListClientAccountBalanceOutput, err error) {
+	err = c.query(ctx, "list_client_account_balance", input, &output)
+	return output, err
 }
 
 type BankAccount struct {
@@ -759,13 +715,9 @@ type ListClientAccountRequestsOutput struct {
 	Requests []ClientAccountRequest `json:"requests"`
 }
 
-func (c *Client) ListClientAccountRequests(ctx context.Context, input *ListClientAccountRequestsInput) (*ListClientAccountRequestsOutput, error) {
-	output := ListClientAccountRequestsOutput{}
-	err := c.query(ctx, "list_client_account_requests", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientAccountRequests(ctx context.Context, input *ListClientAccountRequestsInput) (output *ListClientAccountRequestsOutput, err error) {
+	err = c.query(ctx, "list_client_account_requests", input, &output)
+	return output, err
 }
 
 type ListClientBankAccountsInput struct {
@@ -775,13 +727,9 @@ type ListClientBankAccountsOutput struct {
 	BankAccounts []BankAccount `json:"bankAccounts"`
 }
 
-func (c *Client) ListClientBankAccounts(ctx context.Context, input *ListClientBankAccountsInput) (*ListClientBankAccountsOutput, error) {
-	output := ListClientBankAccountsOutput{}
-	err := c.query(ctx, "list_client_bank_accounts", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientBankAccounts(ctx context.Context, input *ListClientBankAccountsInput) (output *ListClientBankAccountsOutput, err error) {
+	err = c.query(ctx, "list_client_bank_accounts", input, &output)
+	return output, err
 }
 
 type DisplayCurrency struct {
@@ -798,13 +746,9 @@ type ListDisplayCurrenciesOutput struct {
 	Currencies      []DisplayCurrency `json:"currencies"`
 }
 
-func (c *Client) ListDisplayCurrencies(ctx context.Context, input *ListDisplayCurrenciesInput) (*ListDisplayCurrenciesOutput, error) {
-	output := ListDisplayCurrenciesOutput{}
-	err := c.query(ctx, "list_display_currencies", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListDisplayCurrencies(ctx context.Context, input *ListDisplayCurrenciesInput) (output *ListDisplayCurrenciesOutput, err error) {
+	err = c.query(ctx, "list_display_currencies", input, &output)
+	return output, err
 }
 
 type SuitabilityAssessment struct {
@@ -832,13 +776,9 @@ type ListClientSuitabilityAssessmentsOutput struct {
 	Assessments                    []SuitabilityAssessment `json:"assessments"`
 }
 
-func (c *Client) ListClientSuitabilityAssessments(ctx context.Context, input *ListClientSuitabilityAssessmentsInput) (*ListClientSuitabilityAssessmentsOutput, error) {
-	output := ListClientSuitabilityAssessmentsOutput{}
-	err := c.query(ctx, "list_client_suitability_assessments", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientSuitabilityAssessments(ctx context.Context, input *ListClientSuitabilityAssessmentsInput) (output *ListClientSuitabilityAssessmentsOutput, err error) {
+	err = c.query(ctx, "list_client_suitability_assessments", input, &output)
+	return output, err
 }
 
 type DuitNowBank struct {
@@ -856,13 +796,9 @@ type ListDuitNowBanksOutput struct {
 	Banks []DuitNowBank `json:"banks"`
 }
 
-func (c *Client) ListDuitNowBanks(ctx context.Context, input *ListDuitNowBanksInput) (*ListDuitNowBanksOutput, error) {
-	output := ListDuitNowBanksOutput{}
-	err := c.query(ctx, "list_duitnow_banks", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListDuitNowBanks(ctx context.Context, input *ListDuitNowBanksInput) (output *ListDuitNowBanksOutput, err error) {
+	err = c.query(ctx, "list_duitnow_banks", input, &output)
+	return output, err
 }
 
 type Consent struct {
@@ -882,13 +818,9 @@ type ListInvestConsentsOutput struct {
 	ConsentHighRisk bool      `json:"consentHighRisk,omitempty"`
 }
 
-func (c *Client) ListInvestConsents(ctx context.Context, input *ListInvestConsentsInput) (*ListInvestConsentsOutput, error) {
-	output := ListInvestConsentsOutput{}
-	err := c.query(ctx, "list_invest_consents", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListInvestConsents(ctx context.Context, input *ListInvestConsentsInput) (output *ListInvestConsentsOutput, err error) {
+	err = c.query(ctx, "list_invest_consents", input, &output)
+	return output, err
 }
 
 type Bank struct {
@@ -905,13 +837,9 @@ type ListBanksOutput struct {
 	Banks []Bank `json:"banks"`
 }
 
-func (c *Client) ListBanks(ctx context.Context, input *ListBanksInput) (*ListBanksOutput, error) {
-	output := ListBanksOutput{}
-	err := c.query(ctx, "list_banks", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListBanks(ctx context.Context, input *ListBanksInput) (output *ListBanksOutput, err error) {
+	err = c.query(ctx, "list_banks", input, &output)
+	return output, err
 }
 
 type ClientAccountMandateRequest struct {
@@ -945,13 +873,9 @@ type ListClientAccountMandateRequestsOutput struct {
 	Requests []ClientAccountMandateRequest `json:"requests"`
 }
 
-func (c *Client) ListClientAccountMandateRequests(ctx context.Context, input *ListClientAccountMandateRequestsInput) (*ListClientAccountMandateRequestsOutput, error) {
-	output := ListClientAccountMandateRequestsOutput{}
-	err := c.query(ctx, "list_client_account_mandate_requests", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientAccountMandateRequests(ctx context.Context, input *ListClientAccountMandateRequestsInput) (output *ListClientAccountMandateRequestsOutput, err error) {
+	err = c.query(ctx, "list_client_account_mandate_requests", input, &output)
+	return output, err
 }
 
 type Promo struct {
@@ -974,13 +898,9 @@ type ListClientPromosOutput struct {
 	Promos []Promo `json:"promos"`
 }
 
-func (c *Client) ListClientPromos(ctx context.Context, input *ListClientPromosInput) (*ListClientPromosOutput, error) {
-	output := ListClientPromosOutput{}
-	err := c.query(ctx, "list_client_promos", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientPromos(ctx context.Context, input *ListClientPromosInput) (output *ListClientPromosOutput, err error) {
+	err = c.query(ctx, "list_client_promos", input, &output)
+	return output, err
 }
 
 type ClientAccountPerformance struct {
@@ -999,13 +919,9 @@ type ListClientAccountPerformanceOutput struct {
 	Performance []ClientAccountPerformance `json:"performance,omitempty"`
 }
 
-func (c *Client) ListClientAccountPerformance(ctx context.Context, input *ListClientAccountPerformanceInput) (*ListClientAccountPerformanceOutput, error) {
-	output := ListClientAccountPerformanceOutput{}
-	err := c.query(ctx, "list_client_account_performance", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListClientAccountPerformance(ctx context.Context, input *ListClientAccountPerformanceInput) (output *ListClientAccountPerformanceOutput, err error) {
+	err = c.query(ctx, "list_client_account_performance", input, &output)
+	return output, err
 }
 
 type ListPaymentMethodsInput struct {
@@ -1016,13 +932,9 @@ type ListPaymentMethodsOutput struct {
 	BankTransfer bool `json:"bankTransfer"`
 }
 
-func (c *Client) ListPaymentMethods(ctx context.Context, input *ListPaymentMethodsInput) (*ListPaymentMethodsOutput, error) {
-	output := ListPaymentMethodsOutput{}
-	err := c.query(ctx, "list_payment_methods", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) ListPaymentMethods(ctx context.Context, input *ListPaymentMethodsInput) (output *ListPaymentMethodsOutput, err error) {
+	err = c.query(ctx, "list_payment_methods", input, &output)
+	return output, err
 }
 
 type GetVoucherInput struct {
@@ -1043,13 +955,9 @@ type GetVoucherOutput struct {
 	PostFeeAmount                    float64 `json:"postFeeAmount"`
 }
 
-func (c *Client) GetVoucher(ctx context.Context, input *GetVoucherInput) (*GetVoucherOutput, error) {
-	output := GetVoucherOutput{}
-	err := c.query(ctx, "get_voucher", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetVoucher(ctx context.Context, input *GetVoucherInput) (output *GetVoucherOutput, err error) {
+	err = c.query(ctx, "get_voucher", input, &output)
+	return output, err
 }
 
 type GetPreviewInvestInput struct {
@@ -1067,13 +975,9 @@ type GetPreviewInvestOutput struct {
 	DefaultVoucher                   *GetVoucherOutput `json:"defaultVoucher,omitempty"`
 }
 
-func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestInput) (*GetPreviewInvestOutput, error) {
-	output := GetPreviewInvestOutput{}
-	err := c.query(ctx, "get_preview_invest", input, &output)
-	if err != nil {
-		return nil, err
-	}
-	return &output, nil
+func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestInput) (output *GetPreviewInvestOutput, err error) {
+	err = c.query(ctx, "get_preview_invest", input, &output)
+	return output, err
 }
 
 //
