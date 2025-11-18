@@ -741,7 +741,6 @@ type ClientAccountRequest struct {
 }
 
 type ListClientAccountRequestsInput struct {
-	ClientID  string  `json:"clientId,omitempty"`
 	AccountID string  `json:"accountId,omitempty"`
 	RequestID *string `json:"requestId,omitempty"`
 	// Deprecated: Use FundIDs instead.
@@ -932,7 +931,6 @@ type ClientAccountMandateRequest struct {
 }
 
 type ListClientAccountMandateRequestsInput struct {
-	ClientID   string    `json:"clientId,omitempty"`
 	AccountID  string    `json:"accountId,omitempty"`
 	RequestID  *string   `json:"requestId,omitempty"`
 	Types      []*string `json:"types,omitempty"`
