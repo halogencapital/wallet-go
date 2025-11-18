@@ -443,3 +443,448 @@ func (c *Client) GetClientAccountRequestConfirmation(ctx context.Context, input 
 	}
 	return &output, nil
 }
+
+type GetClientReferralInput struct {
+}
+
+type GetClientReferralOutput struct {
+	ReferralCode         string `json:"referralCode,omitempty"`
+	ReferredClientsCount int    `json:"referredClientsCount"`
+}
+
+func (c *Client) GetClientReferral(ctx context.Context, input *GetClientReferralInput) (*GetClientReferralOutput, error) {
+	output := GetClientReferralOutput{}
+	err := c.query(ctx, "get_client_referral", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type PolicyGroup struct {
+	Label string `json:"label,omitempty"`
+	Min   int    `json:"min,omitempty"`
+	Max   int    `json:"max,omitempty"`
+}
+
+type PolicyParticipant struct {
+	Email      string `json:"email,omitempty"`
+	GroupLabel string `json:"groupLabel,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Signed     bool   `json:"signed,omitempty"`
+	SignedAt   string `json:"signedAt,omitempty"`
+}
+
+type GetClientAccountRequestPolicyInput struct {
+	AccountID string `json:"accountId"`
+	RequestID string `json:"requestId"`
+}
+
+type GetClientAccountRequestPolicyOutput struct {
+	Groups       []PolicyGroup       `json:"groups"`
+	Participants []PolicyParticipant `json:"participants"`
+}
+
+func (c *Client) GetClientAccountRequestPolicy(ctx context.Context, input *GetClientAccountRequestPolicyInput) (*GetClientAccountRequestPolicyOutput, error) {
+	output := GetClientAccountRequestPolicyOutput{}
+	err := c.query(ctx, "get_client_account_request_policy", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type ListFundsForSubscriptionInput struct {
+	AccountID string `json:"accountId,omitempty"`
+}
+
+type ListFundsForSubscriptionOutput struct {
+	Funds []Fund `json:"funds"`
+}
+
+func (c *Client) ListFundsForSubscription(ctx context.Context, input *ListFundsForSubscriptionInput) (*ListFundsForSubscriptionOutput, error) {
+	output := ListFundsForSubscriptionOutput{}
+	err := c.query(ctx, "list_funds_for_subscription", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type Balance struct {
+	FundID                    string   `json:"fundId,omitempty"`
+	FundClassSequence         int      `json:"fundClassSequence,omitempty"`
+	FundName                  string   `json:"fundName,omitempty"`
+	FundShortName             string   `json:"fundShortName,omitempty"`
+	FundClassLabel            string   `json:"fundClassLabel,omitempty"`
+	FundCode                  string   `json:"fundCode,omitempty"`
+	FundImageUrl              string   `json:"fundImageUrl,omitempty"`
+	Units                     float64  `json:"units,omitempty"`
+	Asset                     string   `json:"asset,omitempty"`
+	Value                     float64  `json:"value,omitempty"`
+	ValuedAt                  string   `json:"valuedAt,omitempty"`
+	MinimumRedemptionAmount   float64  `json:"minimumRedemptionAmount,omitempty"`
+	MinimumRedemptionUnits    float64  `json:"minimumRedemptionUnits,omitempty"`
+	MinimumSubscriptionAmount float64  `json:"minimumSubscriptionAmount,omitempty"`
+	MinimumSubscriptionUnits  float64  `json:"minimumSubscriptionUnits,omitempty"`
+	RedemptionFeePercentage   float64  `json:"redemptionFeePercentage,omitempty"`
+	SwitchFeePercentage       float64  `json:"switchFeePercentage,omitempty"`
+	AvailableModes            []string `json:"availableModes"`
+	IsOutOfService            bool     `json:"isOutOfService"`
+	OutOfServiceMessage       string   `json:"outOfServiceMessage,omitempty"`
+}
+
+type ListClientAccountBalanceInput struct {
+	AccountID string `json:"accountId,omitempty"`
+}
+
+type ListClientAccountBalanceOutput struct {
+	Balance []*Balance `json:"balance,omitempty"`
+}
+
+func (c *Client) ListClientAccountBalance(ctx context.Context, input *ListClientAccountBalanceInput) (*ListClientAccountBalanceOutput, error) {
+	output := ListClientAccountBalanceOutput{}
+	err := c.query(ctx, "list_client_account_balance", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type BankAccount struct {
+	AccountNumber   string `json:"accountNumber,omitempty"`
+	AccountName     string `json:"accountName,omitempty"`
+	AccountCurrency string `json:"accountCurrency,omitempty"`
+	AccountType     string `json:"accountType,omitempty"`
+	BankName        string `json:"bankName,omitempty"`
+	BankBic         string `json:"bankBic,omitempty"`
+	ReferenceNumber string `json:"referenceNumber,omitempty"`
+	ImageUrl        string `json:"imageUrl,omitempty"`
+	Status          string `json:"status,omitempty"`
+	Source          string `json:"source,omitempty"`
+	CreatedAt       string `json:"createdAt,omitempty"`
+	CreatedBy       string `json:"createdBy,omitempty"`
+}
+
+type ClientAccountRequest struct {
+	ID string `json:"id,omitempty"`
+	// fundmanagement: investment, redemption, switch out, switch in
+	// dim: deposit, withdrawal
+	Type string `json:"type,omitempty"`
+
+	FundID         string `json:"fundId,omitempty"`
+	FundName       string `json:"fundName,omitempty"`
+	FundShortName  string `json:"fundShortName,omitempty"`
+	FundClassLabel string `json:"fundClassLabel,omitempty"`
+
+	Asset                string   `json:"asset,omitempty"`
+	Amount               float64  `json:"amount,omitempty"`
+	PostFeeAmount        float64  `json:"postFeeAmount,omitempty"`
+	Units                float64  `json:"units,omitempty"`
+	UnitPrice            *float64 `json:"unitPrice,omitempty"`
+	FeePercentage        float64  `json:"feePercentage,omitempty"`
+	StrokedFeePercentage float64  `json:"strokedFeePercentage,omitempty"`
+	FeeAmount            float64  `json:"feeAmount,omitempty"`
+	RebateFromDate       string   `json:"rebateFromDate,omitempty"`
+	RebateToDate         string   `json:"rebateToDate,omitempty"`
+	Status               string   `json:"status,omitempty"`
+
+	VoucherCode   *string `json:"voucherCode,omitempty"`
+	ConsentType   *string `json:"consentType,omitempty"`
+	ConsentStatus *string `json:"consentStatus,omitempty"`
+
+	CollectionBankAccount *BankAccount `json:"collectionBankAccount,omitempty"`
+
+	CreatedAt string `json:"createdAt,omitempty"`
+}
+
+type ListClientAccountRequestsInput struct {
+	ClientID  string  `json:"clientId,omitempty"`
+	AccountID string  `json:"accountId,omitempty"`
+	RequestID *string `json:"requestId,omitempty"`
+	// Deprecated: Use FundIDs instead.
+	FundID        *string   `json:"fundId,omitempty"`
+	FundIDs       []*string `json:"fundIds,omitempty"`
+	FromDate      *string   `json:"fromDate,omitempty"`
+	ToDate        *string   `json:"toDate,omitempty"`
+	Types         []*string `json:"types,omitempty"`
+	Statuses      []*string `json:"statuses,omitempty"`
+	Limit         *int      `json:"limit,omitempty"`
+	Offset        *int      `json:"offset,omitempty"`
+	CompletedOnly bool      `json:"completedOnly,omitempty"`
+}
+
+type ListClientAccountRequestsOutput struct {
+	Requests []ClientAccountRequest `json:"requests"`
+}
+
+func (c *Client) ListClientAccountRequests(ctx context.Context, input *ListClientAccountRequestsInput) (*ListClientAccountRequestsOutput, error) {
+	output := ListClientAccountRequestsOutput{}
+	err := c.query(ctx, "list_client_account_requests", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type ListClientBankAccountsInput struct {
+}
+
+type ListClientBankAccountsOutput struct {
+	BankAccounts []BankAccount `json:"bankAccounts"`
+}
+
+func (c *Client) ListClientBankAccounts(ctx context.Context, input *ListClientBankAccountsInput) (*ListClientBankAccountsOutput, error) {
+	output := ListClientBankAccountsOutput{}
+	err := c.query(ctx, "list_client_bank_accounts", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type DisplayCurrency struct {
+	ID       string `json:"id,omitempty"`
+	Label    string `json:"label,omitempty"`
+	ImageUrl string `json:"imageUrl,omitempty"`
+}
+
+type ListDisplayCurrenciesInput struct {
+}
+
+type ListDisplayCurrenciesOutput struct {
+	DisplayCurrency string            `json:"displayCurrency,omitempty"`
+	Currencies      []DisplayCurrency `json:"currencies"`
+}
+
+func (c *Client) ListDisplayCurrencies(ctx context.Context, input *ListDisplayCurrenciesInput) (*ListDisplayCurrenciesOutput, error) {
+	output := ListDisplayCurrenciesOutput{}
+	err := c.query(ctx, "list_display_currencies", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type SuitabilityAssessment struct {
+	ID                   string `json:"id,omitempty"`
+	ClientID             string `json:"clientId,omitempty"`
+	Source               string `json:"source,omitempty"`
+	InvestmentExperience string `json:"investmentExperience,omitempty"`
+	InvestmentObjective  string `json:"investmentObjective,omitempty"`
+	InvestmentHorizon    string `json:"investmentHorizon,omitempty"`
+	CurrentInvestment    string `json:"currentInvestment,omitempty"`
+	ReturnExpectations   string `json:"returnExpectations,omitempty"`
+	Attachment           string `json:"attachment,omitempty"`
+	TotalScore           int    `json:"totalScore,omitempty"`
+	RiskTolerance        string `json:"riskTolerance,omitempty"`
+	CreatedBy            string `json:"createdBy,omitempty"`
+	CreatedAt            string `json:"createdAt,omitempty"`
+}
+
+type ListClientSuitabilityAssessmentsInput struct {
+}
+
+type ListClientSuitabilityAssessmentsOutput struct {
+	ShouldAskSuitabilityAssessment bool                    `json:"shouldAskSuitabilityAssessment"`
+	CanIgnoreSuitabilityAssessment bool                    `json:"canIgnoreSuitabilityAssessment"`
+	Assessments                    []SuitabilityAssessment `json:"assessments"`
+}
+
+func (c *Client) ListClientSuitabilityAssessments(ctx context.Context, input *ListClientSuitabilityAssessmentsInput) (*ListClientSuitabilityAssessmentsOutput, error) {
+	output := ListClientSuitabilityAssessmentsOutput{}
+	err := c.query(ctx, "list_client_suitability_assessments", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type DuitNowBank struct {
+	Code     string `json:"code,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Url      string `json:"url,omitempty"`
+	ImageUrl string `json:"imageUrl,omitempty"`
+}
+
+type ListDuitNowBanksInput struct {
+	AccountID string `json:"accountId,omitempty"`
+}
+
+type ListDuitNowBanksOutput struct {
+	Banks []DuitNowBank `json:"banks"`
+}
+
+func (c *Client) ListDuitNowBanks(ctx context.Context, input *ListDuitNowBanksInput) (*ListDuitNowBanksOutput, error) {
+	output := ListDuitNowBanksOutput{}
+	err := c.query(ctx, "list_duitnow_banks", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type Consent struct {
+	Name  string `json:"name,omitempty"`
+	Label string `json:"label,omitempty"`
+}
+
+type ListInvestConsentsInput struct {
+	AccountID         string `json:"accountId,omitempty"`
+	FundID            string `json:"fundId,omitempty"`
+	FundClassSequence int    `json:"fundClassSequence,omitempty"`
+}
+
+type ListInvestConsentsOutput struct {
+	Consents        []Consent `json:"consents"`
+	ConsentFundIM   bool      `json:"consentFundIM,omitempty"`
+	ConsentHighRisk bool      `json:"consentHighRisk,omitempty"`
+}
+
+func (c *Client) ListInvestConsents(ctx context.Context, input *ListInvestConsentsInput) (*ListInvestConsentsOutput, error) {
+	output := ListInvestConsentsOutput{}
+	err := c.query(ctx, "list_invest_consents", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type Bank struct {
+	Name     string `json:"name,omitempty"`
+	Bic      string `json:"bic,omitempty"`
+	ImageUrl string `json:"imageUrl,omitempty"`
+	Rank     int    `json:"rank,omitempty"`
+}
+
+type ListBanksInput struct {
+}
+
+type ListBanksOutput struct {
+	Banks []Bank `json:"banks"`
+}
+
+func (c *Client) ListBanks(ctx context.Context, input *ListBanksInput) (*ListBanksOutput, error) {
+	output := ListBanksOutput{}
+	err := c.query(ctx, "list_banks", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type ClientAccountMandateRequest struct {
+	ID string `json:"id,omitempty"`
+	// Deposit / Withdraw / Buy / Sell
+	Type string `json:"type,omitempty"`
+
+	BaseAsset  string  `json:"baseAsset,omitempty"`
+	BaseAmount float64 `json:"baseAmount,omitempty"`
+
+	QuoteAsset  string  `json:"quoteAsset,omitempty"`
+	QuoteAmount float64 `json:"quoteAmount,omitempty"`
+
+	UnitPrice float64 `json:"unitPrice,omitempty"`
+	Status    string  `json:"status,omitempty"`
+	CreatedAt string  `json:"createdAt,omitempty"`
+}
+
+type ListClientAccountMandateRequestsInput struct {
+	ClientID   string    `json:"clientId,omitempty"`
+	AccountID  string    `json:"accountId,omitempty"`
+	RequestID  *string   `json:"requestId,omitempty"`
+	Types      []*string `json:"types,omitempty"`
+	BaseAssets []*string `json:"baseAssets,omitempty"`
+	FromDate   *string   `json:"fromDate,omitempty"`
+	ToDate     *string   `json:"toDate,omitempty"`
+	Limit      *int      `json:"limit,omitempty"`
+	Offset     *int      `json:"offset,omitempty"`
+}
+
+type ListClientAccountMandateRequestsOutput struct {
+	Requests []ClientAccountMandateRequest `json:"requests"`
+}
+
+func (c *Client) ListClientAccountMandateRequests(ctx context.Context, input *ListClientAccountMandateRequestsInput) (*ListClientAccountMandateRequestsOutput, error) {
+	output := ListClientAccountMandateRequestsOutput{}
+	err := c.query(ctx, "list_client_account_mandate_requests", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type Promo struct {
+	AccountID          string  `json:"accountId,omitempty"`
+	AccountName        string  `json:"accountName,omitempty"`
+	Code               string  `json:"code,omitempty"`
+	Label              string  `json:"label,omitempty"`
+	Description        string  `json:"description,omitempty"`
+	DiscountPercentage float64 `json:"discountPercentage,omitempty"`
+	DiscountFrom       string  `json:"discountFrom,omitempty"`
+	ValidFromDate      *string `json:"validFromDate,omitempty"`
+	ValidToDate        *string `json:"validToDate,omitempty"`
+	CreatedAt          string  `json:"createdAt,omitempty"`
+}
+
+type ListClientPromosInput struct {
+}
+
+type ListClientPromosOutput struct {
+	Promos []Promo `json:"promos"`
+}
+
+func (c *Client) ListClientPromos(ctx context.Context, input *ListClientPromosInput) (*ListClientPromosOutput, error) {
+	output := ListClientPromosOutput{}
+	err := c.query(ctx, "list_client_promos", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type ClientAccountPerformance struct {
+	Date      string  `json:"date,omitempty"`
+	AccountID string  `json:"accountId,omitempty"`
+	Value     float64 `json:"value,omitempty"`
+}
+
+type ListClientAccountPerformanceInput struct {
+	AccountIDs []string `json:"accountIds,omitempty"`
+	Timeframe  string   `json:"timeframe,omitempty"`
+	Interval   string   `json:"interval,omitempty"`
+}
+
+type ListClientAccountPerformanceOutput struct {
+	Performance []ClientAccountPerformance `json:"performance,omitempty"`
+}
+
+func (c *Client) ListClientAccountPerformance(ctx context.Context, input *ListClientAccountPerformanceInput) (*ListClientAccountPerformanceOutput, error) {
+	output := ListClientAccountPerformanceOutput{}
+	err := c.query(ctx, "list_client_account_performance", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type ListPaymentMethodsInput struct {
+}
+
+type ListPaymentMethodsOutput struct {
+	Duitnow      bool `json:"duitnow"`
+	BankTransfer bool `json:"bankTransfer"`
+}
+
+func (c *Client) ListPaymentMethods(ctx context.Context, input *ListPaymentMethodsInput) (*ListPaymentMethodsOutput, error) {
+	output := ListPaymentMethodsOutput{}
+	err := c.query(ctx, "list_payment_methods", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+//
+// Commands
+//
