@@ -885,6 +885,57 @@ func (c *Client) ListPaymentMethods(ctx context.Context, input *ListPaymentMetho
 	return &output, nil
 }
 
+type GetVoucherInput struct {
+	AccountID         string  `json:"accountId,omitempty"`
+	FundID            string  `json:"fundId,omitempty"`
+	FundClassSequence int     `json:"fundClassSequence,omitempty"`
+	Amount            float64 `json:"amount,omitempty"`
+	VoucherCode       *string `json:"voucherCode,omitempty"`
+}
+
+type GetVoucherOutput struct {
+	Valid                            bool    `json:"valid"`
+	Code                             string  `json:"code"`
+	StrokedSubscriptionFeePercentage float64 `json:"strokedSubscriptionFeePercentage"`
+	AppliedSubscriptionFeePercentage float64 `json:"appliedSubscriptionFeePercentage"`
+	VoucherDiscountPercentage        float64 `json:"voucherDiscountPercentage"`
+	FeeAmount                        float64 `json:"feeAmount"`
+	PostFeeAmount                    float64 `json:"postFeeAmount"`
+}
+
+func (c *Client) GetVoucher(ctx context.Context, input *GetVoucherInput) (*GetVoucherOutput, error) {
+	output := GetVoucherOutput{}
+	err := c.query(ctx, "get_voucher", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
+type GetPreviewInvestInput struct {
+	AccountID         string  `json:"accountId,omitempty"`
+	FundID            string  `json:"fundId,omitempty"`
+	FundClassSequence int     `json:"fundClassSequence,omitempty"`
+	Amount            float64 `json:"amount,omitempty"`
+}
+
+type GetPreviewInvestOutput struct {
+	StrokedSubscriptionFeePercentage float64           `json:"strokedSubscriptionFeePercentage"`
+	AppliedSubscriptionFeePercentage float64           `json:"appliedSubscriptionFeePercentage"`
+	PostFeeAmount                    float64           `json:"postFeeAmount"`
+	FeeAmount                        float64           `json:"feeAmount"`
+	DefaultVoucher                   *GetVoucherOutput `json:"defaultVoucher,omitempty"`
+}
+
+func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestInput) (*GetPreviewInvestOutput, error) {
+	output := GetPreviewInvestOutput{}
+	err := c.query(ctx, "get_preview_invest", input, &output)
+	if err != nil {
+		return nil, err
+	}
+	return &output, nil
+}
+
 //
 // Commands
 //
