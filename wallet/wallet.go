@@ -980,6 +980,377 @@ func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestIn
 	return output, err
 }
 
-//
 // Commands
-//
+type PortfolioAsset struct {
+	ID                string `json:"id,omitempty"`
+	FundClassSequence *int   `json:"fundClassSequence,omitempty"`
+	Name              string `json:"name,omitempty"`
+	Code              string `json:"code,omitempty"`
+	ImageUrl          string `json:"imageUrl,omitempty"`
+	// spot, fund
+	Type                      string  `json:"type,omitempty"`
+	HexColor                  string  `json:"hexColor,omitempty"`
+	Group                     string  `json:"group,omitempty"`
+	GroupHexColor             string  `json:"groupHexColor,omitempty"`
+	ExposurePercentage        float64 `json:"exposurePercentage,omitempty"`
+	MinimumExposurePercentage float64 `json:"minimumExposurePercentage,omitempty"`
+}
+
+type CreateAccountInput struct {
+	ClientID   string           `json:"clientId,omitempty"`
+	Name       string           `json:"name,omitempty"`
+	Type       string           `json:"type,omitempty"`
+	Experience string           `json:"experience,omitempty"`
+	Assets     []PortfolioAsset `json:"assets,omitempty"`
+}
+
+type CreateAccountOutput struct {
+	AccountID string `json:"accountId,omitempty"`
+}
+
+func (c *Client) CreateAccount(ctx context.Context, input *CreateAccountInput) (output *CreateAccountOutput, err error) {
+	err = c.command(ctx, "create_account", input, &output)
+	return output, err
+}
+
+type InvestInput struct {
+	ClientID          string  `json:"clientId,omitempty"`
+	AccountID         string  `json:"accountId,omitempty"`
+	FundID            string  `json:"fundId,omitempty"`
+	FundClassSequence int     `json:"fundClassSequence,omitempty"`
+	Amount            float64 `json:"amount,omitempty"`
+
+	// ConsentFundIM is deprecated, use Consents instead.
+	ConsentFundIM bool `json:"consentFundIM,omitempty"`
+	// ConsentHighRisk is deprecated, use Consents instead.
+	ConsentHighRisk bool `json:"consentHighRisk,omitempty"`
+
+	Consents map[string]bool `json:"consents,omitempty"`
+
+	VoucherCode string `json:"voucherCode,omitempty"`
+}
+
+type InvestOutput struct {
+	RequestID string `json:"requestId,omitempty"`
+}
+
+func (c *Client) Invest(ctx context.Context, input *InvestInput) (output *InvestOutput, err error) {
+	err = c.command(ctx, "invest", input, &output)
+	return output, err
+}
+
+type RedeemInput struct {
+	ClientID            string  `json:"clientId,omitempty"`
+	AccountID           string  `json:"accountId,omitempty"`
+	FundID              string  `json:"fundId,omitempty"`
+	FundClassSequence   int     `json:"fundClassSequence,omitempty"`
+	RequestedAmount     float64 `json:"requestedAmount,omitempty"`
+	Units               float64 `json:"units,omitempty"`
+	ToBankAccountNumber string  `json:"toBankAccountNumber,omitempty"`
+}
+
+type RedeemOutput struct {
+	RequestID string `json:"requestId,omitempty"`
+}
+
+func (c *Client) Redeem(ctx context.Context, input *RedeemInput) (output *RedeemOutput, err error) {
+	err = c.command(ctx, "redeem", input, &output)
+	return output, err
+}
+
+type SwitchInput struct {
+	ClientID  string `json:"clientId,omitempty"`
+	AccountID string `json:"accountId,omitempty"`
+
+	SwitchFromFundID            string `json:"switchFromFundId,omitempty"`
+	SwitchFromFundClassSequence int    `json:"switchFromFundClassSequence,omitempty"`
+	SwitchToFundID              string `json:"switchToFundId,omitempty"`
+	SwitchToFundClassSequence   int    `json:"switchToFundClassSequence,omitempty"`
+
+	RequestedAmount float64 `json:"requestedAmount,omitempty"`
+	Units           float64 `json:"units,omitempty"`
+}
+
+type SwitchOutput struct {
+	RequestID string `json:"requestId,omitempty"`
+}
+
+func (c *Client) Switch(ctx context.Context, input *SwitchInput) (output *SwitchOutput, err error) {
+	err = c.command(ctx, "switch", input, &output)
+	return output, err
+}
+
+type CancelRequestInput struct {
+	ClientID  string `json:"clientId,omitempty"`
+	AccountID string `json:"accountId,omitempty"`
+	RequestID string `json:"requestId,omitempty"`
+}
+
+type CancelRequestOutput struct {
+}
+
+func (c *Client) CancelRequest(ctx context.Context, input *CancelRequestInput) (output *CancelRequestOutput, err error) {
+	err = c.command(ctx, "switch", input, &output)
+	return output, err
+}
+
+type WithdrawInput struct {
+	ClientID  string  `json:"clientId,omitempty"`
+	AccountID string  `json:"accountId,omitempty"`
+	Amount    float64 `json:"amount,omitempty"`
+}
+
+type WithdrawOutput struct {
+	RequestID string `json:"requestId,omitempty"`
+}
+
+func (c *Client) Withdraw(ctx context.Context, input *WithdrawInput) (output *WithdrawOutput, err error) {
+	err = c.command(ctx, "withdraw", input, &output)
+	return output, err
+}
+
+type DepositInput struct {
+	ClientID  string  `json:"clientId,omitempty"`
+	AccountID string  `json:"accountId,omitempty"`
+	Amount    float64 `json:"amount,omitempty"`
+}
+
+type DepositOutput struct {
+	RequestID string `json:"requestId,omitempty"`
+}
+
+func (c *Client) Deposit(ctx context.Context, input *DepositInput) (output *DepositOutput, err error) {
+	err = c.command(ctx, "deposit", input, &output)
+	return output, err
+}
+
+type CreateSuitabilityAssessmentInput struct {
+	ClientID              string                 `json:"clientId,omitempty"`
+	SuitabilityAssessment *SuitabilityAssessment `json:"suitabilityAssessment,omitempty"`
+}
+
+type CreateSuitabilityAssessmentOutput struct {
+	SuitabilityAssessmentID string `json:"suitabilityAssessmentId,omitempty"`
+}
+
+func (c *Client) CreateSuitabilityAssessment(ctx context.Context, input *CreateSuitabilityAssessmentInput) (output *CreateSuitabilityAssessmentOutput, err error) {
+	err = c.command(ctx, "create_suitability_assessment", input, &output)
+	return output, err
+}
+
+type CreateClientBankAccountInput struct {
+	ClientID    string       `json:"clientId,omitempty"`
+	BankAccount *BankAccount `json:"bankAccount,omitempty"`
+}
+
+type CreateClientBankAccountOutput struct {
+}
+
+func (c *Client) CreateClientBankAccount(ctx context.Context, input *CreateClientBankAccountInput) (output *CreateClientBankAccountOutput, err error) {
+	err = c.command(ctx, "create_client_bank_account", input, &output)
+	return output, err
+}
+
+type UpdateDisplayCurrencyInput struct {
+	ClientID        string `json:"clientId,omitempty"`
+	DisplayCurrency string `json:"displayCurrency,omitempty"`
+}
+
+type UpdateDisplayCurrencyOutput struct {
+}
+
+func (c *Client) UpdateDisplayCurrency(ctx context.Context, input *UpdateDisplayCurrencyInput) (output *UpdateDisplayCurrencyOutput, err error) {
+	err = c.command(ctx, "update_display_currency", input, &output)
+	return output, err
+}
+
+type UpdateAccountNameInput struct {
+	ClientID    string `json:"clientId,omitempty"`
+	AccountID   string `json:"accountId,omitempty"`
+	AccountName string `json:"accountName,omitempty"`
+}
+
+type UpdateAccountNameOutput struct {
+}
+
+func (c *Client) UpdateAccountName(ctx context.Context, input *UpdateAccountNameInput) (output *UpdateAccountNameOutput, err error) {
+	err = c.command(ctx, "update_account_name", input, &output)
+	return output, err
+}
+
+type InitiateDuitNowPaymentInput struct {
+	ClientID  string `json:"clientId,omitempty"`
+	AccountID string `json:"accountId,omitempty"`
+	RequestID string `json:"requestId,omitempty"`
+	BankCode  string `json:"bankCode,omitempty"`
+}
+
+type InitiateDuitNowPaymentOutput struct {
+	Url string `json:"url,omitempty"`
+}
+
+func (c *Client) InitiateDuitNowPayment(ctx context.Context, input *InitiateDuitNowPaymentInput) (output *InitiateDuitNowPaymentOutput, err error) {
+	err = c.command(ctx, "initiate_duitnow_payment", input, &output)
+	return output, err
+}
+
+type UpdatePersonaTitleInput struct {
+	Title string `json:"title,omitempty"`
+}
+
+type UpdatePersonaTitleOutput struct {
+}
+
+func (c *Client) UpdatePersonaTitle(ctx context.Context, input *UpdatePersonaTitleInput) (output *UpdatePersonaTitleOutput, err error) {
+	err = c.command(ctx, "update_persona_title", input, &output)
+	return output, err
+}
+
+type UpdateClientProfileInput struct {
+	ClientID string `json:"clientId,omitempty"`
+
+	Ethnicity      string `json:"ethnicity,omitempty"`
+	OtherEthnicity string `json:"otherEthnicity,omitempty"`
+
+	DomesticRinggitBorrowing string `json:"domesticRinggitBorrowing,omitempty"`
+	TaxResidency             string `json:"taxResidency,omitempty"`
+	CountryTax               string `json:"countryTax,omitempty"`
+	TaxIdentificationNo      string `json:"taxIdentificationNo,omitempty"`
+}
+
+type UpdateClientProfileOutput struct {
+}
+
+func (c *Client) UpdateClientProfile(ctx context.Context, input *UpdateClientProfileInput) (output *UpdateClientProfileOutput, err error) {
+	err = c.command(ctx, "update_client_profile", input, &output)
+	return output, err
+}
+
+type SubscribePushNotificationInput struct {
+	ClientID string `json:"clientId,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	OS       string `json:"os,omitempty"`
+	Token    string `json:"token,omitempty"`
+}
+
+type SubscribePushNotificationOutput struct {
+}
+
+func (c *Client) SubscribePushNotification(ctx context.Context, input *SubscribePushNotificationInput) (output *SubscribePushNotificationOutput, err error) {
+	err = c.command(ctx, "subscribe_push_notification", input, &output)
+	return output, err
+}
+
+type UnsubscribePushNotificationInput struct {
+	ClientID string `json:"clientId,omitempty"`
+	Token    string `json:"token,omitempty"`
+}
+
+type UnsubscribePushNotificationOutput struct {
+}
+
+func (c *Client) UnsubscribePushNotification(ctx context.Context, input *UnsubscribePushNotificationInput) (output *UnsubscribePushNotificationOutput, err error) {
+	err = c.command(ctx, "unsubscribe_push_notification", input, &output)
+	return output, err
+}
+
+type ContactSupportInput struct {
+	ClientID string `json:"clientId,omitempty"`
+	Message  string `json:"message,omitempty"`
+}
+
+type ContactSupportOutput struct {
+}
+
+func (c *Client) ContactSupport(ctx context.Context, input *ContactSupportInput) (output *ContactSupportOutput, err error) {
+	err = c.command(ctx, "contact_support", input, &output)
+	return output, err
+}
+
+type DropEventInput struct {
+	DeviceID string `json:"deviceId,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Route    string `json:"route,omitempty"`
+}
+
+type DropEventOutput struct {
+}
+
+func (c *Client) DropEvent(ctx context.Context, input *DropEventInput) (output *DropEventOutput, err error) {
+	err = c.command(ctx, "drop_event", input, &output)
+	return output, err
+}
+
+type FirebasePushMessage struct {
+	Data         map[string]string         `json:"data,omitempty"`
+	Notification *FirebasePushNotification `json:"notification,omitempty"`
+	Token        string                    `json:"token,omitempty"`
+	Topic        string                    `json:"-"`
+	Condition    string                    `json:"condition,omitempty"`
+}
+
+type FirebasePushNotification struct {
+	Title    string `json:"title,omitempty"`
+	Body     string `json:"body,omitempty"`
+	ImageURL string `json:"image,omitempty"`
+}
+
+type TestPushNotificationInput struct {
+	Message *FirebasePushMessage `json:"message,omitempty"`
+}
+
+type TestPushNotificationOutput struct {
+	ID string `json:"id,omitempty"`
+}
+
+func (c *Client) TestPushNotification(ctx context.Context, input *TestPushNotificationInput) (output *TestPushNotificationOutput, err error) {
+	err = c.command(ctx, "test_push_notification", input, &output)
+	return output, err
+}
+
+type RegisterPublicKeyInput struct {
+	PublicKey       string `json:"publicKey,omitempty"`
+	PublicKeyFormat string `json:"publicKeyFormat,omitempty"`
+}
+
+type RegisterPublicKeyOutput struct {
+	PublicKeyID string `json:"publicKeyId,omitempty"`
+}
+
+func (c *Client) RegisterPublicKey(ctx context.Context, input *RegisterPublicKeyInput) (output *RegisterPublicKeyOutput, err error) {
+	err = c.command(ctx, "register_public_key", input, &output)
+	return output, err
+}
+
+type CreateApiKeyInput struct {
+	ClientID                     string   `json:"clientId,omitempty"`
+	Label                        string   `json:"label,omitempty"`
+	CertificateSigningRequestPEM string   `json:"certificateSigningRequestPem,omitempty"`
+	Permissions                  []string `json:"permissions,omitempty"`
+	AccountsIDs                  []string `json:"accountsIds,omitempty"`
+	WhitelistedIPs               []string `json:"whitelistedIps,omitempty"`
+	ExpiryDate                   *string  `json:"expiryDate,omitempty"`
+}
+
+type CreateApiKeyOutput struct {
+	KeyID    string `json:"keyId"`
+	ClientID string `json:"clientId"`
+}
+
+func (c *Client) CreateApiKey(ctx context.Context, input *CreateApiKeyInput) (output *CreateApiKeyOutput, err error) {
+	err = c.command(ctx, "create_api_key", input, &output)
+	return output, err
+}
+
+type DeleteApiKeyInput struct {
+	ClientID string `json:"clientId"`
+	KeyID    string `json:"keyId"`
+}
+
+type DeleteApiKeyOutput struct {
+}
+
+func (c *Client) DeleteApiKey(ctx context.Context, input *DeleteApiKeyInput) (output *DeleteApiKeyOutput, err error) {
+	err = c.command(ctx, "delete_api_key", input, &output)
+	return output, err
+}
