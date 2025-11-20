@@ -980,7 +980,10 @@ func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestIn
 	return output, err
 }
 
+//
 // Commands
+//
+
 type PortfolioAsset struct {
 	ID                string `json:"id,omitempty"`
 	FundClassSequence *int   `json:"fundClassSequence,omitempty"`
@@ -994,23 +997,6 @@ type PortfolioAsset struct {
 	GroupHexColor             string  `json:"groupHexColor,omitempty"`
 	ExposurePercentage        float64 `json:"exposurePercentage,omitempty"`
 	MinimumExposurePercentage float64 `json:"minimumExposurePercentage,omitempty"`
-}
-
-type CreateAccountInput struct {
-	ClientID   string           `json:"clientId,omitempty"`
-	Name       string           `json:"name,omitempty"`
-	Type       string           `json:"type,omitempty"`
-	Experience string           `json:"experience,omitempty"`
-	Assets     []PortfolioAsset `json:"assets,omitempty"`
-}
-
-type CreateAccountOutput struct {
-	AccountID string `json:"accountId,omitempty"`
-}
-
-func (c *Client) CreateAccount(ctx context.Context, input *CreateAccountInput) (output *CreateAccountOutput, err error) {
-	err = c.command(ctx, "create_account", input, &output)
-	return output, err
 }
 
 type InvestInput struct {
@@ -1226,61 +1212,6 @@ func (c *Client) UpdateClientProfile(ctx context.Context, input *UpdateClientPro
 	return output, err
 }
 
-type SubscribePushNotificationInput struct {
-	ClientID string `json:"clientId,omitempty"`
-	Platform string `json:"platform,omitempty"`
-	OS       string `json:"os,omitempty"`
-	Token    string `json:"token,omitempty"`
-}
-
-type SubscribePushNotificationOutput struct {
-}
-
-func (c *Client) SubscribePushNotification(ctx context.Context, input *SubscribePushNotificationInput) (output *SubscribePushNotificationOutput, err error) {
-	err = c.command(ctx, "subscribe_push_notification", input, &output)
-	return output, err
-}
-
-type UnsubscribePushNotificationInput struct {
-	ClientID string `json:"clientId,omitempty"`
-	Token    string `json:"token,omitempty"`
-}
-
-type UnsubscribePushNotificationOutput struct {
-}
-
-func (c *Client) UnsubscribePushNotification(ctx context.Context, input *UnsubscribePushNotificationInput) (output *UnsubscribePushNotificationOutput, err error) {
-	err = c.command(ctx, "unsubscribe_push_notification", input, &output)
-	return output, err
-}
-
-type ContactSupportInput struct {
-	ClientID string `json:"clientId,omitempty"`
-	Message  string `json:"message,omitempty"`
-}
-
-type ContactSupportOutput struct {
-}
-
-func (c *Client) ContactSupport(ctx context.Context, input *ContactSupportInput) (output *ContactSupportOutput, err error) {
-	err = c.command(ctx, "contact_support", input, &output)
-	return output, err
-}
-
-type DropEventInput struct {
-	DeviceID string `json:"deviceId,omitempty"`
-	Platform string `json:"platform,omitempty"`
-	Route    string `json:"route,omitempty"`
-}
-
-type DropEventOutput struct {
-}
-
-func (c *Client) DropEvent(ctx context.Context, input *DropEventInput) (output *DropEventOutput, err error) {
-	err = c.command(ctx, "drop_event", input, &output)
-	return output, err
-}
-
 type FirebasePushMessage struct {
 	Data         map[string]string         `json:"data,omitempty"`
 	Notification *FirebasePushNotification `json:"notification,omitempty"`
@@ -1293,64 +1224,4 @@ type FirebasePushNotification struct {
 	Title    string `json:"title,omitempty"`
 	Body     string `json:"body,omitempty"`
 	ImageURL string `json:"image,omitempty"`
-}
-
-type TestPushNotificationInput struct {
-	Message *FirebasePushMessage `json:"message,omitempty"`
-}
-
-type TestPushNotificationOutput struct {
-	ID string `json:"id,omitempty"`
-}
-
-func (c *Client) TestPushNotification(ctx context.Context, input *TestPushNotificationInput) (output *TestPushNotificationOutput, err error) {
-	err = c.command(ctx, "test_push_notification", input, &output)
-	return output, err
-}
-
-type RegisterPublicKeyInput struct {
-	PublicKey       string `json:"publicKey,omitempty"`
-	PublicKeyFormat string `json:"publicKeyFormat,omitempty"`
-}
-
-type RegisterPublicKeyOutput struct {
-	PublicKeyID string `json:"publicKeyId,omitempty"`
-}
-
-func (c *Client) RegisterPublicKey(ctx context.Context, input *RegisterPublicKeyInput) (output *RegisterPublicKeyOutput, err error) {
-	err = c.command(ctx, "register_public_key", input, &output)
-	return output, err
-}
-
-type CreateApiKeyInput struct {
-	ClientID                     string   `json:"clientId,omitempty"`
-	Label                        string   `json:"label,omitempty"`
-	CertificateSigningRequestPEM string   `json:"certificateSigningRequestPem,omitempty"`
-	Permissions                  []string `json:"permissions,omitempty"`
-	AccountsIDs                  []string `json:"accountsIds,omitempty"`
-	WhitelistedIPs               []string `json:"whitelistedIps,omitempty"`
-	ExpiryDate                   *string  `json:"expiryDate,omitempty"`
-}
-
-type CreateApiKeyOutput struct {
-	KeyID    string `json:"keyId"`
-	ClientID string `json:"clientId"`
-}
-
-func (c *Client) CreateApiKey(ctx context.Context, input *CreateApiKeyInput) (output *CreateApiKeyOutput, err error) {
-	err = c.command(ctx, "create_api_key", input, &output)
-	return output, err
-}
-
-type DeleteApiKeyInput struct {
-	ClientID string `json:"clientId"`
-	KeyID    string `json:"keyId"`
-}
-
-type DeleteApiKeyOutput struct {
-}
-
-func (c *Client) DeleteApiKey(ctx context.Context, input *DeleteApiKeyInput) (output *DeleteApiKeyOutput, err error) {
-	err = c.command(ctx, "delete_api_key", input, &output)
-	return output, err
 }
