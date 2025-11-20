@@ -406,35 +406,85 @@ type GetClientProfileOutput struct {
 	Status string `json:"status,omitempty"`
 }
 
+// GetClientProfile retrieves the profile details of a client.
 func (c *Client) GetClientProfile(ctx context.Context, input *GetClientProfileInput) (output *GetClientProfileOutput, err error) {
 	err = c.query(ctx, "get_client_profile", input, &output)
 	return output, err
 }
 
 type Fund struct {
-	ID                   string                 `json:"id,omitempty"`
-	Type                 string                 `json:"type,omitempty"`
-	Name                 string                 `json:"name,omitempty"`
-	ShortName            string                 `json:"shortName,omitempty"`
-	BaseCurrency         string                 `json:"baseCurrency,omitempty"`
-	Category             string                 `json:"category,omitempty"`
-	Code                 string                 `json:"code,omitempty"`
-	InvestmentObjective  string                 `json:"investmentObjective,omitempty"`
-	InvestorType         string                 `json:"investorType,omitempty"`
-	RiskRating           string                 `json:"riskRating,omitempty"`
-	RiskScore            int                    `json:"riskScore,omitempty"`
-	PrimaryFundManager   string                 `json:"primaryFundManager,omitempty"`
-	SecondaryFundManager string                 `json:"secondaryFundManager,omitempty"`
-	ShariahCompliant     bool                   `json:"shariahCompliant,omitempty"`
-	Status               string                 `json:"status,omitempty"`
-	TagLine              string                 `json:"tagLine,omitempty"`
-	Trustee              string                 `json:"trustee,omitempty"`
-	ImageUrl             string                 `json:"imageUrl,omitempty"`
-	CreatedAt            string                 `json:"createdAt,omitempty"`
-	Classes              []FundClass            `json:"classes,omitempty"`
-	IsOutOfService       bool                   `json:"isOutOfService"`
-	OutOfServiceMessage  string                 `json:"outOfServiceMessage,omitempty"`
-	Metadata             map[string]interface{} `json:"metadata,omitempty"`
+	// ID specifies the hexadecimal representation of the Fund identifier. 20 bytes
+	// in length (40 hexadecimal characters).
+	ID string `json:"id,omitempty"`
+
+	// Type specifies the Fund type. Value is one of "income", "growth".
+	Type string `json:"type,omitempty"`
+
+	// Name specifies the legal name of the Fund.
+	Name string `json:"name,omitempty"`
+
+	// ShortName specifies the short name of the fund for better user experience.
+	ShortName string `json:"shortName,omitempty"`
+
+	// BaseCurrency specifies the fund's denmoinated currency.
+	BaseCurrency string `json:"baseCurrency,omitempty"`
+
+	// Category specifies the fund's category.
+	Category string `json:"category,omitempty"`
+
+	// Code specifies the fund's code. (e.g HSBTCF, HSETHF, HSCTF, HSRIF)
+	Code string `json:"code,omitempty"`
+
+	// InvestmentObjective specifies the objective of the fund as per the
+	// information memorandum.
+	InvestmentObjective string `json:"investmentObjective,omitempty"`
+	// InvestorType specifies the type of the investor who can invest in this fund.
+	InvestorType string `json:"investorType,omitempty"`
+
+	// RiskRating specifies the amount of risk this fund has in text format. Value is one of
+	// "low", "moderate", "high".
+	RiskRating string `json:"riskRating,omitempty"`
+	// RiskScore specifies the amount of risk this fund has in numeric format. Value is range
+	// from 5 (low) to 16 (high).
+	RiskScore int `json:"riskScore,omitempty"`
+
+	// PrimaryFundManager specifies the name of the primary fund manager who
+	// is managing the fund.
+	PrimaryFundManager string `json:"primaryFundManager,omitempty"`
+	// SecondaryFundManager specifies the name of the secondary fund manager who
+	// is managing the fund.
+	SecondaryFundManager string `json:"secondaryFundManager,omitempty"`
+
+	// ShariahCompliant reports whether the fund is shariah compliant. True when it is shariah compliant.
+	ShariahCompliant bool `json:"shariahCompliant,omitempty"`
+
+	// Status specifies the status of the fund. Value is one of "pending", "active" or "archived".
+	Status string `json:"status,omitempty"`
+
+	// TagLine specifies the marketing line where it outlines the feature of the fund.
+	TagLine string `json:"tagLine,omitempty"`
+
+	// Trustee specifies the name of the trustee of the fund.
+	Trustee string `json:"trustee,omitempty"`
+
+	// ImageUrl specifies the Web URL that leads to the logo of the fund. For instance,
+	// "https://media.halogen.my/fund/hsbtcf/logo.svg".
+	ImageUrl string `json:"imageUrl,omitempty"`
+
+	// CreatedAt specifies the date-time of which the fund was created on.
+	CreatedAt string `json:"createdAt,omitempty"`
+
+	// Classes specifies the fund's classes.
+	Classes []FundClass `json:"classes,omitempty"`
+
+	// IsOutOfService reports whether the fund is out of service. True when the fund is out of service.
+	IsOutOfService bool `json:"isOutOfService"`
+	// OutOfServiceMessage specifies the reason of which the fund is out of service.
+	OutOfServiceMessage string `json:"outOfServiceMessage,omitempty"`
+
+	// Metadata includes extra attributes related to the requester. For instance,
+	// the minimum investment amount the requester must specify upon creating an investment request.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
 type FundClass struct {
