@@ -1048,10 +1048,6 @@ func (c *Client) GetProjectedFundPrice(ctx context.Context, input *GetProjectedF
 // Commands
 //
 
-//
-// Commands
-//
-
 // InvestInput represents the payload for creating a new investment request.
 type InvestInput struct {
 	// AccountID specifies the identifier of the client account for the investment.
