@@ -113,9 +113,6 @@ const (
 	// ErrInvalidRequestPolicy is returned when the request violates one or more policy constraints.
 	ErrInvalidRequestPolicy string = "ErrInvalidRequestPolicy"
 
-	// ErrRedemptionError is returned when the redemption request failed due to business rules or fund constraints.
-	ErrRedemptionError string = "ErrRedemptionError"
-
 	// ErrRequestCannotBeCancelled is returned when the request cannot be cancelled due to its current state or business rules.
 	ErrRequestCannotBeCancelled string = "ErrRequestCannotBeCancelled"
 
