@@ -139,7 +139,7 @@ const (
 	// ErrInternal is returned when an unexpected internal server error occurs.
 	ErrInternal string = "ErrInternal"
 
-	// ErrServiceUnavailable is returned when the service is temporarily unavailable; try again later.
+	// ErrServiceUnavailable is returned when a 3rd-party service is temporarily unavailable; try again later.
 	ErrServiceUnavailable string = "ErrServiceUnavailable"
 )
 
