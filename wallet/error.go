@@ -38,6 +38,9 @@ const (
 	// ErrInvalidBodyFormat is returned when the request body is malformed or not in the expected format.
 	ErrInvalidBodyFormat string = "ErrInvalidBodyFormat"
 
+	// ErrInvalidDateRange is returned when the specified date range is invalid or not logically consistent.
+	ErrInvalidDateRange string = "ErrInvalidDateRange"
+
 	// ErrInvalidHeader is returned when one or more required headers are missing or invalid.
 	ErrInvalidHeader string = "ErrInvalidHeader"
 
