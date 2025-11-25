@@ -2,15 +2,21 @@ openapi: 3.0.0
 info:
   title: Halogen Wallet API
   description: |
-    API documentation generated from `wallet.go`.
-    
-    ### JSON-RPC Architecture
-    This API uses a **JSON-RPC** pattern over HTTP POST. 
-    
-    **How to use:**
-    1.  Select the endpoint (`/query` or `/command`).
-    2.  In the **Request Body**, use the **Schema dropdown** to select the specific action (e.g., `ListClientAccounts`).
-    3.  The schema will update to show the required `name` and `payload` for that specific action.
+    The Halogen Wallet API provides a unified interface for managing client investment portfolios, funds, and transaction requests.
+
+    ### API Usage Guide
+
+    This API routes requests through two primary endpoints based on the operation type.
+
+    * **`/query`**: Used for **read-only** operations (e.g., listing accounts, getting profile details).
+    * **`/command`**: Used for **write/mutate** operations (e.g., creating investments, updating profiles).
+
+    ### Request Structure
+    Every request must be a **POST** containing a JSON body with two keys:
+    1.  `name`: The specific action identifier (e.g., `list_client_accounts`).
+    2.  `payload`: The data structure required for that specific action.
+
+    > **Documentation Tip:** In the **Request Body** section below, use the **Schema/Example Dropdown** to select the specific action you want to perform. The documentation will update to show the exact `payload` required.
   version: 1.0.0
 servers:
   - url: https://external-api.wallet.halogen.my
@@ -49,7 +55,7 @@ components:
       value: { statusCode: 400, code: "ErrRequestCannotBeCancelled", message: "Request cannot be cancelled. {reason}." }
     
     ErrUnauthorizedIPAddress:
-      value: { statusCode: 401, code: "ErrUnauthorizedIPAddress", message: "IP address not authorized." }
+      value: { statusCode: 401, code: "ErrUnauthorizedIPAddress", message: "IP address is not authorized." }
     
     ErrInsufficientAccess:
       value: { statusCode: 403, code: "ErrInsufficientAccess", message: "" }
