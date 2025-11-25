@@ -27,16 +27,11 @@ func (c *Client) query(ctx context.Context, name string, input interface{}, outp
 	// retriedCount increments on >= 500 errors
 	retriedCount := 0
 retry:
-	var jsonBuffer bytes.Buffer
-	if err := json.NewEncoder(&jsonBuffer).Encode(input); err != nil {
-		return err
-	}
 	body := queryInput{
 		Name:    name,
 		Payload: input,
 	}
-	jsonBuffer.Reset()
-
+	var jsonBuffer bytes.Buffer
 	if err := json.NewEncoder(&jsonBuffer).Encode(body); err != nil {
 		return err
 	}
@@ -130,16 +125,11 @@ type commandInput struct {
 func (c *Client) command(ctx context.Context, name string, input interface{}, output interface{}) error {
 	// only retry rate limited errors.
 retry:
-	var jsonBuffer bytes.Buffer
-	if err := json.NewEncoder(&jsonBuffer).Encode(input); err != nil {
-		return err
-	}
 	body := commandInput{
 		Name:    name,
 		Payload: input,
 	}
-	jsonBuffer.Reset()
-
+	var jsonBuffer bytes.Buffer
 	if err := json.NewEncoder(&jsonBuffer).Encode(body); err != nil {
 		return err
 	}
