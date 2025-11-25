@@ -1487,6 +1487,7 @@ type GetProjectedFundPriceInput struct {
 }
 
 type GetProjectedFundPriceOutput struct {
+	Asset                string  `json:"asset"`
 	NetAssetValuePerUnit float64 `json:"netAssetValuePerUnit"`
 }
 
