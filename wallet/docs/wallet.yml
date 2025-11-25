@@ -5,13 +5,12 @@ info:
     API documentation generated from `wallet.go`.
     
     ### JSON-RPC Architecture
-    This API uses a **JSON-RPC** pattern over HTTP POST.
+    This API uses a **JSON-RPC** pattern over HTTP POST. 
     
-    **How to use the Request Body Dropdown:**
-    1.  Expand the `/query` or `/command` endpoint.
-    2.  In the **Request Body** section, locate the **Schema/Example** dropdown (often labeled "schema" or showing the name of the current object).
-    3.  Select the specific action (e.g., `list_client_accounts`).
-    4.  The Example Value and Schema will update to show the specific `payload` required for that action.
+    **How to use:**
+    1.  Select the endpoint (`/query` or `/command`).
+    2.  In the **Request Body**, use the **Schema dropdown** to select the specific action (e.g., `ListClientAccounts`).
+    3.  The schema will update to show the required `name` and `payload` for that specific action.
   version: 1.0.0
 servers:
   - url: https://external-api.wallet.halogen.my
@@ -25,126 +24,156 @@ components:
       bearerFormat: JWT
 
   # -------------------------------------------------------------------------
-  # ERROR EXAMPLES
+  # SHARED ERROR EXAMPLES (Values)
   # -------------------------------------------------------------------------
   examples:
     ErrMissingParameter:
-      value:
-        statusCode: 400
-        code: "ErrMissingParameter"
-        message: "The required field '{field}' is missing."
+      value: { statusCode: 400, code: "ErrMissingParameter", message: "{field} is required." }
     ErrInvalidParameter:
-      value:
-        statusCode: 400
-        code: "ErrInvalidParameter"
-        message: "The field '{field}' is invalid."
+      value: { statusCode: 400, code: "ErrInvalidParameter", message: "{field} is invalid." }
     ErrInvalidDateRange:
-      value:
-        statusCode: 400
-        code: "ErrInvalidDateRange"
-        message: "fromDate must be earlier than toDate."
+      value: { statusCode: 400, code: "ErrInvalidDateRange", message: "fromDate must be earlier than toDate." }
     ErrActionOutsideFundHours:
-      value:
-        statusCode: 400
-        code: "ErrActionOutsideFundHours"
-        message: "Unable to {action}. Fund's operation hours 08:00 to 22:00 MYT"
+      value: { statusCode: 400, code: "ErrActionOutsideFundHours", message: "Unable to {action}. Fund's operation hours 08:00 to 22:00 MYT" }
     ErrInsufficientBalance:
-      value:
-        statusCode: 400
-        code: "ErrInsufficientBalance"
-        message: "Account has insufficient balance."
-    ErrDuitNow:
-      value:
-        statusCode: 400
-        code: "ErrDuitNow"
-        message: "DuitNow payment initiation failed."
+      value: { statusCode: 400, code: "ErrInsufficientBalance", message: "insufficient balance." }
+    ErrDuitNowInvalidParameter:
+      value: { statusCode: 400, code: "ErrDuitNow", message: "{reason}." }
     ErrAlreadyExists:
-      value:
-        statusCode: 400
-        code: "ErrAlreadyExists"
-        message: "'{resource}' already exists."
+      value: { statusCode: 400, code: "ErrAlreadyExists", message: "{resource} already exists." }
     ErrInvalidAccountExperience:
-      value:
-        statusCode: 400
-        code: "ErrInvalidAccountExperience"
-        message: "Account experience level does not meet requirements."
+      value: { statusCode: 400, code: "ErrInvalidAccountExperience", message: "account is not a {experience}." }
     ErrInvalidRequestPolicy:
-      value:
-        statusCode: 400
-        code: "ErrInvalidRequestPolicy"
-        message: "Request violates approval policy."
-    ErrInsufficientAccess:
-      value:
-        statusCode: 403
-        code: "ErrInsufficientAccess"
-        message: "Client does not have sufficient permissions."
-    ErrUnauthorizedIPAddress:
-      value:
-        statusCode: 401
-        code: "ErrUnauthorizedIPAddress"
-        message: "IP address not authorized."
-    ErrMissingResource:
-      value:
-        statusCode: 404
-        code: "ErrMissingResource"
-        message: "The '{resource}' does not exist."
-    ErrActionNotAllowedForAccountType:
-      value:
-        statusCode: 412
-        code: "ErrActionNotAllowedForAccountType"
-        message: "Action not allowed for this account type."
-    ErrSuitabilityAssessmentRequired:
-      value:
-        statusCode: 412
-        code: "ErrSuitabilityAssessmentRequired"
-        message: "Suitability assessment required."
-    ErrCancelledRequest:
-      value:
-        statusCode: 410
-        code: "ErrCancelledRequest"
-        message: "The request has been cancelled."
+      value: { statusCode: 400, code: "ErrInvalidRequestPolicy", message: "policy is invalid. Value must be {reason}." }
     ErrRequestCannotBeCancelled:
-      value:
-        statusCode: 400
-        code: "ErrRequestCannotBeCancelled"
-        message: "Request cannot be cancelled in current state."
+      value: { statusCode: 400, code: "ErrRequestCannotBeCancelled", message: "Request cannot be cancelled. {reason}." }
+    
+    ErrUnauthorizedIPAddress:
+      value: { statusCode: 401, code: "ErrUnauthorizedIPAddress", message: "IP address not authorized." }
+    
+    ErrInsufficientAccess:
+      value: { statusCode: 403, code: "ErrInsufficientAccess", message: "" }
+    
+    ErrMissingResource:
+      value: { statusCode: 404, code: "ErrMissingResource", message: "The {resource} does not exist." }
+    
+    ErrCancelledRequest:
+      value: { statusCode: 410, code: "ErrCancelledRequest", message: "The request has been cancelled." }
+    
+    ErrActionNotAllowedForAccountType:
+      value: { statusCode: 412, code: "ErrActionNotAllowedForAccountType", message: "Action not allowed for this account type." }
+    ErrSuitabilityAssessmentRequired:
+      value: { statusCode: 412, code: "ErrSuitabilityAssessmentRequired", message: "Suitability assessment required." }
+    
     ErrRateLimitExceeded:
-      value:
-        statusCode: 429
-        code: "ErrRateLimitExceeded"
-        message: "Rate limit exceeded."
+      value: { statusCode: 429, code: "ErrRateLimitExceeded", message: "rate limit exceeded." }
+    
     ErrInternal:
-      value:
-        statusCode: 500
-        code: "ErrInternal"
-        message: "An unexpected internal server error occurred."
+      value: { statusCode: 500, code: "ErrInternal", message: "" }
+    
     ErrServiceUnavailable:
-      value:
-        statusCode: 503
-        code: "ErrServiceUnavailable"
-        message: "Service temporarily unavailable."
+      value: { statusCode: 503, code: "ErrServiceUnavailable", message: "" }
+    ErrDuitNowUnavailable:
+      value: { statusCode: 503, code: "ErrDuitNowUnavailable", message: "DuitNow is offline, please try again later." }
+
+  # -------------------------------------------------------------------------
+  # SHARED RESPONSE DEFINITIONS (The "Dropdowns" for Errors)
+  # -------------------------------------------------------------------------
+  responses:
+    BadRequestError:
+      description: Bad Request / Validation Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrMissingParameter: { $ref: '#/components/examples/ErrMissingParameter' }
+            ErrInvalidParameter: { $ref: '#/components/examples/ErrInvalidParameter' }
+            ErrInvalidDateRange: { $ref: '#/components/examples/ErrInvalidDateRange' }
+            ErrInvalidRequestPolicy: { $ref: '#/components/examples/ErrInvalidRequestPolicy' }
+            ErrActionOutsideFundHours: { $ref: '#/components/examples/ErrActionOutsideFundHours' }
+            ErrInsufficientBalance: { $ref: '#/components/examples/ErrInsufficientBalance' }
+            ErrDuitNowInvalidParameter: { $ref: '#/components/examples/ErrDuitNowInvalidParameter' }
+            ErrAlreadyExists: { $ref: '#/components/examples/ErrAlreadyExists' }
+            ErrInvalidAccountExperience: { $ref: '#/components/examples/ErrInvalidAccountExperience' }
+            ErrRequestCannotBeCancelled: { $ref: '#/components/examples/ErrRequestCannotBeCancelled' }
+
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrUnauthorizedIPAddress: { $ref: '#/components/examples/ErrUnauthorizedIPAddress' }
+
+    ForbiddenError:
+      description: Forbidden
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrInsufficientAccess: { $ref: '#/components/examples/ErrInsufficientAccess' }
+
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrMissingResource: { $ref: '#/components/examples/ErrMissingResource' }
+
+    GoneError:
+      description: Gone
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrCancelledRequest: { $ref: '#/components/examples/ErrCancelledRequest' }
+
+    PreconditionFailedError:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrActionNotAllowedForAccountType: { $ref: '#/components/examples/ErrActionNotAllowedForAccountType' }
+            ErrSuitabilityAssessmentRequired: { $ref: '#/components/examples/ErrSuitabilityAssessmentRequired' }
+
+    TooManyRequestsError:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrRateLimitExceeded: { $ref: '#/components/examples/ErrRateLimitExceeded' }
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrInternal: { $ref: '#/components/examples/ErrInternal' }
+
+    ServiceUnavailableError:
+      description: Service Unavailable
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            ErrServiceUnavailable: { $ref: '#/components/examples/ErrServiceUnavailable' }
+            ErrDuitNowUnavailable: { $ref: '#/components/examples/ErrDuitNowUnavailable' }
 
   schemas:
     # -------------------------------------------------------------------------
-    # ERROR SCHEMA
+    # DATA MODELS
     # -------------------------------------------------------------------------
     Error:
       type: object
       properties:
-        statusCode:
-          type: integer
-          deprecated: true
-          example: 400
-        code:
-          type: string
-          example: "ErrMissingParameter"
-        message:
-          type: string
-          example: "accountId is required."
+        statusCode: { type: integer, deprecated: true, example: 400 }
+        code: { type: string, example: "ErrMissingParameter" }
+        message: { type: string, example: "accountId is required." }
 
-    # -------------------------------------------------------------------------
-    # SHARED DOMAIN MODELS
-    # -------------------------------------------------------------------------
     Address:
       type: object
       properties:
@@ -205,7 +234,7 @@ components:
         minimumInitialInvestment: { type: number }
 
     # -------------------------------------------------------------------------
-    # INPUTS & OUTPUTS
+    # PAYLOADS (Inputs & Outputs)
     # -------------------------------------------------------------------------
     ListClientAccountsInput:
       type: object
@@ -215,6 +244,8 @@ components:
       type: object
       properties:
         amount: { type: number }
+        asset: { type: string }
+        canCreateAccount: { type: boolean }
         accounts: { type: array, items: { $ref: '#/components/schemas/ClientAccount' } }
 
     GetClientProfileInput:
@@ -585,309 +616,194 @@ components:
     ListClientAccounts:
       type: object
       properties:
-        name: { type: string, enum: [list_client_accounts] }
+        name: { type: string, enum: [list_client_accounts], example: list_client_accounts }
         payload: { $ref: '#/components/schemas/ListClientAccountsInput' }
-      example:
-        name: list_client_accounts
-        payload:
-          accountIds: ["acc_123"]
     GetClientProfile:
       type: object
       properties:
-        name: { type: string, enum: [get_client_profile] }
+        name: { type: string, enum: [get_client_profile], example: get_client_profile }
         payload: { $ref: '#/components/schemas/GetClientProfileInput' }
-      example:
-        name: get_client_profile
-        payload: {}
     GetFund:
       type: object
       properties:
-        name: { type: string, enum: [get_fund] }
+        name: { type: string, enum: [get_fund], example: get_fund }
         payload: { $ref: '#/components/schemas/GetFundInput' }
-      example:
-        name: get_fund
-        payload: { fundId: "fund_123" }
     GetRequestByDuitNowEndToEndID:
       type: object
       properties:
-        name: { type: string, enum: [get_request_by_duitnow_endToEndId] }
+        name: { type: string, enum: [get_request_by_duitnow_endToEndId], example: get_request_by_duitnow_endToEndId }
         payload: { $ref: '#/components/schemas/GetRequestByDuitNowEndToEndIDInput' }
-      example:
-        name: get_request_by_duitnow_endToEndId
-        payload: { accountId: "acc_1", endToEndId: "e2e_123" }
     GetClientAccountAllocationPerformance:
       type: object
       properties:
-        name: { type: string, enum: [get_client_account_allocation_performance] }
+        name: { type: string, enum: [get_client_account_allocation_performance], example: get_client_account_allocation_performance }
         payload: { $ref: '#/components/schemas/GetClientAccountAllocationPerformanceInput' }
-      example:
-        name: get_client_account_allocation_performance
-        payload: { accountId: "acc_1", allocationId: "alloc_1" }
     GetClientAccountStatement:
       type: object
       properties:
-        name: { type: string, enum: [get_client_account_statement] }
+        name: { type: string, enum: [get_client_account_statement], example: get_client_account_statement }
         payload: { $ref: '#/components/schemas/GetClientAccountStatementInput' }
-      example:
-        name: get_client_account_statement
-        payload: { accountId: "acc_1", fromDate: "2023-01-01", toDate: "2023-01-31" }
     GetClientAccountRequestConfirmation:
       type: object
       properties:
-        name: { type: string, enum: [get_client_account_request_confirmation] }
+        name: { type: string, enum: [get_client_account_request_confirmation], example: get_client_account_request_confirmation }
         payload: { $ref: '#/components/schemas/GetClientAccountRequestConfirmationInput' }
-      example:
-        name: get_client_account_request_confirmation
-        payload: { accountId: "acc_1", requestId: "req_1" }
     GetClientReferral:
       type: object
       properties:
-        name: { type: string, enum: [get_client_referral] }
+        name: { type: string, enum: [get_client_referral], example: get_client_referral }
         payload: { $ref: '#/components/schemas/GetClientReferralInput' }
-      example:
-        name: get_client_referral
-        payload: {}
     GetClientAccountRequestPolicy:
       type: object
       properties:
-        name: { type: string, enum: [get_client_account_request_policy] }
+        name: { type: string, enum: [get_client_account_request_policy], example: get_client_account_request_policy }
         payload: { $ref: '#/components/schemas/GetClientAccountRequestPolicyInput' }
-      example:
-        name: get_client_account_request_policy
-        payload: { accountId: "acc_1", requestId: "1" }
     ListFundsForSubscription:
       type: object
       properties:
-        name: { type: string, enum: [list_funds_for_subscription] }
+        name: { type: string, enum: [list_funds_for_subscription], example: list_funds_for_subscription }
         payload: { $ref: '#/components/schemas/ListFundsForSubscriptionInput' }
-      example:
-        name: list_funds_for_subscription
-        payload: { accountId: "acc_1" }
     ListClientAccountBalance:
       type: object
       properties:
-        name: { type: string, enum: [list_client_account_balance] }
+        name: { type: string, enum: [list_client_account_balance], example: list_client_account_balance }
         payload: { $ref: '#/components/schemas/ListClientAccountBalanceInput' }
-      example:
-        name: list_client_account_balance
-        payload: { accountId: "acc_1" }
     ListClientAccountRequests:
       type: object
       properties:
-        name: { type: string, enum: [list_client_account_requests] }
+        name: { type: string, enum: [list_client_account_requests], example: list_client_account_requests }
         payload: { $ref: '#/components/schemas/ListClientAccountRequestsInput' }
-      example:
-        name: list_client_account_requests
-        payload: { accountId: "acc_1", limit: 10 }
     ListClientBankAccounts:
       type: object
       properties:
-        name: { type: string, enum: [list_client_bank_accounts] }
+        name: { type: string, enum: [list_client_bank_accounts], example: list_client_bank_accounts }
         payload: { $ref: '#/components/schemas/ListClientBankAccountsInput' }
-      example:
-        name: list_client_bank_accounts
-        payload: {}
     ListDisplayCurrencies:
       type: object
       properties:
-        name: { type: string, enum: [list_display_currencies] }
+        name: { type: string, enum: [list_display_currencies], example: list_display_currencies }
         payload: { $ref: '#/components/schemas/ListDisplayCurrenciesInput' }
-      example:
-        name: list_display_currencies
-        payload: {}
     ListClientSuitabilityAssessments:
       type: object
       properties:
-        name: { type: string, enum: [list_client_suitability_assessments] }
+        name: { type: string, enum: [list_client_suitability_assessments], example: list_client_suitability_assessments }
         payload: { $ref: '#/components/schemas/ListClientSuitabilityAssessmentsInput' }
-      example:
-        name: list_client_suitability_assessments
-        payload: {}
     ListDuitNowBanks:
       type: object
       properties:
-        name: { type: string, enum: [list_duitnow_banks] }
+        name: { type: string, enum: [list_duitnow_banks], example: list_duitnow_banks }
         payload: { $ref: '#/components/schemas/ListDuitNowBanksInput' }
-      example:
-        name: list_duitnow_banks
-        payload: { accountId: "acc_1" }
     ListInvestConsents:
       type: object
       properties:
-        name: { type: string, enum: [list_invest_consents] }
+        name: { type: string, enum: [list_invest_consents], example: list_invest_consents }
         payload: { $ref: '#/components/schemas/ListInvestConsentsInput' }
-      example:
-        name: list_invest_consents
-        payload: { accountId: "acc_1", fundId: "fund_1" }
     ListBanks:
       type: object
       properties:
-        name: { type: string, enum: [list_banks] }
+        name: { type: string, enum: [list_banks], example: list_banks }
         payload: { $ref: '#/components/schemas/ListBanksInput' }
-      example:
-        name: list_banks
-        payload: {}
     ListClientAccountMandateRequests:
       type: object
       properties:
-        name: { type: string, enum: [list_client_account_mandate_requests] }
+        name: { type: string, enum: [list_client_account_mandate_requests], example: list_client_account_mandate_requests }
         payload: { $ref: '#/components/schemas/ListClientAccountMandateRequestsInput' }
-      example:
-        name: list_client_account_mandate_requests
-        payload: { accountId: "acc_1" }
     ListClientPromos:
       type: object
       properties:
-        name: { type: string, enum: [list_client_promos] }
+        name: { type: string, enum: [list_client_promos], example: list_client_promos }
         payload: { $ref: '#/components/schemas/ListClientPromosInput' }
-      example:
-        name: list_client_promos
-        payload: {}
     ListClientAccountPerformance:
       type: object
       properties:
-        name: { type: string, enum: [list_client_account_performance] }
+        name: { type: string, enum: [list_client_account_performance], example: list_client_account_performance }
         payload: { $ref: '#/components/schemas/ListClientAccountPerformanceInput' }
-      example:
-        name: list_client_account_performance
-        payload: { accountIds: ["acc_1"] }
     ListPaymentMethods:
       type: object
       properties:
-        name: { type: string, enum: [list_payment_methods] }
+        name: { type: string, enum: [list_payment_methods], example: list_payment_methods }
         payload: { $ref: '#/components/schemas/ListPaymentMethodsInput' }
-      example:
-        name: list_payment_methods
-        payload: {}
     GetVoucher:
       type: object
       properties:
-        name: { type: string, enum: [get_voucher] }
+        name: { type: string, enum: [get_voucher], example: get_voucher }
         payload: { $ref: '#/components/schemas/GetVoucherInput' }
-      example:
-        name: get_voucher
-        payload: { accountId: "acc_1", voucherCode: "CODE" }
     GetPreviewInvest:
       type: object
       properties:
-        name: { type: string, enum: [get_preview_invest] }
+        name: { type: string, enum: [get_preview_invest], example: get_preview_invest }
         payload: { $ref: '#/components/schemas/GetPreviewInvestInput' }
-      example:
-        name: get_preview_invest
-        payload: { accountId: "acc_1", amount: 1000 }
     GetProjectedFundPrice:
       type: object
       properties:
-        name: { type: string, enum: [get_projected_fund_price] }
+        name: { type: string, enum: [get_projected_fund_price], example: get_projected_fund_price }
         payload: { $ref: '#/components/schemas/GetProjectedFundPriceInput' }
-      example:
-        name: get_projected_fund_price
-        payload: { fundId: "fund_1" }
 
     CreateInvestmentRequest:
       type: object
       properties:
-        name: { type: string, enum: [create_investment_request] }
+        name: { type: string, enum: [create_investment_request], example: create_investment_request }
         payload: { $ref: '#/components/schemas/CreateInvestmentRequestInput' }
-      example:
-        name: create_investment_request
-        payload: { accountId: "acc_1", amount: 5000 }
     CreateRedemptionRequest:
       type: object
       properties:
-        name: { type: string, enum: [create_redemption_request] }
+        name: { type: string, enum: [create_redemption_request], example: create_redemption_request }
         payload: { $ref: '#/components/schemas/CreateRedemptionRequestInput' }
-      example:
-        name: create_redemption_request
-        payload: { accountId: "acc_1", requestedAmount: 1000 }
     CreateSwitchRequest:
       type: object
       properties:
-        name: { type: string, enum: [create_switch_request] }
+        name: { type: string, enum: [create_switch_request], example: create_switch_request }
         payload: { $ref: '#/components/schemas/CreateSwitchRequestInput' }
-      example:
-        name: create_switch_request
-        payload: { accountId: "acc_1", switchFromFundId: "f1", switchToFundId: "f2" }
     CreateRequestCancellation:
       type: object
       properties:
-        name: { type: string, enum: [create_request_cancellation] }
+        name: { type: string, enum: [create_request_cancellation], example: create_request_cancellation }
         payload: { $ref: '#/components/schemas/CreateRequestCancellationInput' }
-      example:
-        name: create_request_cancellation
-        payload: { accountId: "acc_1", requestId: "1" }
     CreateWithdrawalRequest:
       type: object
       properties:
-        name: { type: string, enum: [create_withdrawal_request] }
+        name: { type: string, enum: [create_withdrawal_request], example: create_withdrawal_request }
         payload: { $ref: '#/components/schemas/CreateWithdrawalRequestInput' }
-      example:
-        name: create_withdrawal_request
-        payload: { accountId: "acc_1", amount: 200 }
     CreateDepositRequest:
       type: object
       properties:
-        name: { type: string, enum: [create_deposit_request] }
+        name: { type: string, enum: [create_deposit_request], example: create_deposit_request }
         payload: { $ref: '#/components/schemas/CreateDepositRequestInput' }
-      example:
-        name: create_deposit_request
-        payload: { accountId: "acc_1", amount: 200 }
     CreateSuitabilityAssessment:
       type: object
       properties:
-        name: { type: string, enum: [create_suitability_assessment] }
+        name: { type: string, enum: [create_suitability_assessment], example: create_suitability_assessment }
         payload: { $ref: '#/components/schemas/CreateSuitabilityAssessmentInput' }
-      example:
-        name: create_suitability_assessment
-        payload: { suitabilityAssessment: { riskTolerance: "High" } }
     CreateClientBankAccount:
       type: object
       properties:
-        name: { type: string, enum: [create_client_bank_account] }
+        name: { type: string, enum: [create_client_bank_account], example: create_client_bank_account }
         payload: { $ref: '#/components/schemas/CreateClientBankAccountInput' }
-      example:
-        name: create_client_bank_account
-        payload: { bankAccount: { accountNumber: "12345" } }
     UpdateDisplayCurrency:
       type: object
       properties:
-        name: { type: string, enum: [update_display_currency] }
+        name: { type: string, enum: [update_display_currency], example: update_display_currency }
         payload: { $ref: '#/components/schemas/UpdateDisplayCurrencyInput' }
-      example:
-        name: update_display_currency
-        payload: { displayCurrency: "USD" }
     UpdateAccountName:
       type: object
       properties:
-        name: { type: string, enum: [update_account_name] }
+        name: { type: string, enum: [update_account_name], example: update_account_name }
         payload: { $ref: '#/components/schemas/UpdateAccountNameInput' }
-      example:
-        name: update_account_name
-        payload: { accountId: "acc_1", accountName: "New Name" }
     CreateDuitnowPayment:
       type: object
       properties:
-        name: { type: string, enum: [create_duitnow_payment] }
+        name: { type: string, enum: [create_duitnow_payment], example: create_duitnow_payment }
         payload: { $ref: '#/components/schemas/CreateDuitnowPaymentInput' }
-      example:
-        name: create_duitnow_payment
-        payload: { accountId: "acc_1", bankCode: "MBB" }
     UpdatePersonaTitle:
       type: object
       properties:
-        name: { type: string, enum: [update_persona_title] }
+        name: { type: string, enum: [update_persona_title], example: update_persona_title }
         payload: { $ref: '#/components/schemas/UpdatePersonaTitleInput' }
-      example:
-        name: update_persona_title
-        payload: { title: "Mr." }
     UpdateClientProfile:
       type: object
       properties:
-        name: { type: string, enum: [update_client_profile] }
+        name: { type: string, enum: [update_client_profile], example: update_client_profile }
         payload: { $ref: '#/components/schemas/UpdateClientProfileInput' }
-      example:
-        name: update_client_profile
-        payload: { ethnicity: "chinese" }
 
 security:
   - BearerAuth: []
@@ -997,78 +913,23 @@ paths:
                   - $ref: '#/components/schemas/GetPreviewInvestOutput'
                   - $ref: '#/components/schemas/GetProjectedFundPriceOutput'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrMissingParameter: { $ref: '#/components/examples/ErrMissingParameter' }
-                ErrInvalidParameter: { $ref: '#/components/examples/ErrInvalidParameter' }
-                ErrInvalidDateRange: { $ref: '#/components/examples/ErrInvalidDateRange' }
-                ErrInvalidRequestPolicy: { $ref: '#/components/examples/ErrInvalidRequestPolicy' }
-                ErrActionOutsideFundHours: { $ref: '#/components/examples/ErrActionOutsideFundHours' }
-                ErrInsufficientBalance: { $ref: '#/components/examples/ErrInsufficientBalance' }
-                ErrDuitNow: { $ref: '#/components/examples/ErrDuitNow' }
-                ErrAlreadyExists: { $ref: '#/components/examples/ErrAlreadyExists' }
-                ErrInvalidAccountExperience: { $ref: '#/components/examples/ErrInvalidAccountExperience' }
-                ErrRequestCannotBeCancelled: { $ref: '#/components/examples/ErrRequestCannotBeCancelled' }
+          $ref: '#/components/responses/BadRequestError'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrUnauthorizedIPAddress: { $ref: '#/components/examples/ErrUnauthorizedIPAddress' }
+          $ref: '#/components/responses/UnauthorizedError'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrInsufficientAccess: { $ref: '#/components/examples/ErrInsufficientAccess' }
+          $ref: '#/components/responses/ForbiddenError'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrMissingResource: { $ref: '#/components/examples/ErrMissingResource' }
+          $ref: '#/components/responses/NotFoundError'
         '410':
-          description: Gone
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrCancelledRequest: { $ref: '#/components/examples/ErrCancelledRequest' }
+          $ref: '#/components/responses/GoneError'
         '412':
-          description: Precondition Failed
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrActionNotAllowedForAccountType: { $ref: '#/components/examples/ErrActionNotAllowedForAccountType' }
-                ErrSuitabilityAssessmentRequired: { $ref: '#/components/examples/ErrSuitabilityAssessmentRequired' }
+          $ref: '#/components/responses/PreconditionFailedError'
         '429':
-          description: Too Many Requests
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrRateLimitExceeded: { $ref: '#/components/examples/ErrRateLimitExceeded' }
+          $ref: '#/components/responses/TooManyRequestsError'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrInternal: { $ref: '#/components/examples/ErrInternal' }
+          $ref: '#/components/responses/InternalServerError'
         '503':
-          description: Service Unavailable
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrServiceUnavailable: { $ref: '#/components/examples/ErrServiceUnavailable' }
+          $ref: '#/components/responses/ServiceUnavailableError'
 
   # -------------------------------------------------------------------------
   # COMMAND ENDPOINT
@@ -1139,71 +1000,20 @@ paths:
                   - $ref: '#/components/schemas/UpdatePersonaTitleOutput'
                   - $ref: '#/components/schemas/UpdateClientProfileOutput'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrMissingParameter: { $ref: '#/components/examples/ErrMissingParameter' }
-                ErrInvalidParameter: { $ref: '#/components/examples/ErrInvalidParameter' }
-                ErrActionOutsideFundHours: { $ref: '#/components/examples/ErrActionOutsideFundHours' }
-                ErrInsufficientBalance: { $ref: '#/components/examples/ErrInsufficientBalance' }
-                ErrDuitNow: { $ref: '#/components/examples/ErrDuitNow' }
-                ErrAlreadyExists: { $ref: '#/components/examples/ErrAlreadyExists' }
-                ErrRequestCannotBeCancelled: { $ref: '#/components/examples/ErrRequestCannotBeCancelled' }
+          $ref: '#/components/responses/BadRequestError'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrUnauthorizedIPAddress: { $ref: '#/components/examples/ErrUnauthorizedIPAddress' }
+          $ref: '#/components/responses/UnauthorizedError'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrInsufficientAccess: { $ref: '#/components/examples/ErrInsufficientAccess' }
+          $ref: '#/components/responses/ForbiddenError'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrMissingResource: { $ref: '#/components/examples/ErrMissingResource' }
+          $ref: '#/components/responses/NotFoundError'
         '410':
-          description: Gone
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrCancelledRequest: { $ref: '#/components/examples/ErrCancelledRequest' }
+          $ref: '#/components/responses/GoneError'
         '412':
-          description: Precondition Failed
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrActionNotAllowedForAccountType: { $ref: '#/components/examples/ErrActionNotAllowedForAccountType' }
+          $ref: '#/components/responses/PreconditionFailedError'
         '429':
-          description: Too Many Requests
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrRateLimitExceeded: { $ref: '#/components/examples/ErrRateLimitExceeded' }
+          $ref: '#/components/responses/TooManyRequestsError'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrInternal: { $ref: '#/components/examples/ErrInternal' }
+          $ref: '#/components/responses/InternalServerError'
         '503':
-          description: Service Unavailable
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-              examples:
-                ErrServiceUnavailable: { $ref: '#/components/examples/ErrServiceUnavailable' }
+          $ref: '#/components/responses/ServiceUnavailableError'
