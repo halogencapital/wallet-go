@@ -1658,9 +1658,7 @@ type CreateSuitabilityAssessmentOutput struct {
 //	      "returnExpectations": "<returnExpectations>",
 //	      "attachment": "<attachment>",
 //	      "totalScore": <totalScore>,
-//	      "riskTolerance": "<riskTolerance>",
-//	      "createdBy": "<createdBy>",
-//	      "createdAt": "<createdAt>"
+//	      "riskTolerance": "<riskTolerance>"
 //	    }
 //	  }
 //	}'
@@ -1706,9 +1704,7 @@ type CreateClientBankAccountOutput struct {
 //	      "referenceNumber": "<referenceNumber>",
 //	      "imageUrl": "<imageUrl>",
 //	      "status": "<status>",
-//	      "source": "<source>",
-//	      "createdAt": "<createdAt>",
-//	      "createdBy": "<createdBy>"
+//	      "source": "<source>"
 //	    }
 //	  }
 //	}'
