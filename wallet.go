@@ -581,40 +581,6 @@ func (c *Client) GetFund(ctx context.Context, input *GetFundInput) (output *GetF
 	return output, err
 }
 
-type GetRequestByDuitNowEndToEndIDInput struct {
-	AccountID  string `json:"accountId,omitempty"`
-	EndToEndID string `json:"endToEndId,omitempty"`
-}
-
-type GetRequestByDuitNowEndToEndIDOutput struct {
-	RequestID string `json:"requestId,omitempty"`
-}
-
-// GetRequestByDuitNowEndToEndID retrieves a request ID using the DuitNow end-to-end ID.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/query" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "get_request_by_duitnow_endToEndId",
-//	  "payload": {
-//	    "accountId": "<accountId>",
-//	    "endToEndId": "<endToEndId>"
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrInsufficientAccess]
-//   - [ErrMissingResource]
-//   - [ErrInternal]
-func (c *Client) GetRequestByDuitNowEndToEndID(ctx context.Context, input *GetRequestByDuitNowEndToEndIDInput) (output *GetRequestByDuitNowEndToEndIDOutput, err error) {
-	err = c.query(ctx, "get_request_by_duitnow_endToEndId", input, &output)
-	return output, err
-}
-
 type AllocationPerformance struct {
 	Date                 string  `json:"date,omitempty"`
 	Units                float64 `json:"units,omitempty"`
@@ -1125,37 +1091,6 @@ type DuitNowBank struct {
 	ImageUrl string `json:"imageUrl,omitempty"`
 }
 
-type ListDuitNowBanksInput struct {
-	AccountID string `json:"accountId,omitempty"`
-}
-
-type ListDuitNowBanksOutput struct {
-	Banks []DuitNowBank `json:"banks"`
-}
-
-// ListDuitNowBanks lists the available banks for DuitNow transfers.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/query" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "list_duitnow_banks",
-//	  "payload": {
-//	    "accountId": "<accountId>"
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrInsufficientAccess]
-//   - [ErrInternal]
-func (c *Client) ListDuitNowBanks(ctx context.Context, input *ListDuitNowBanksInput) (output *ListDuitNowBanksOutput, err error) {
-	err = c.query(ctx, "list_duitnow_banks", input, &output)
-	return output, err
-}
-
 type Consent struct {
 	Name  string `json:"name,omitempty"`
 	Label string `json:"label,omitempty"`
@@ -1248,53 +1183,6 @@ type ClientAccountMandateRequest struct {
 	UnitPrice float64 `json:"unitPrice,omitempty"`
 	Status    string  `json:"status,omitempty"`
 	CreatedAt string  `json:"createdAt,omitempty"`
-}
-
-type ListClientAccountMandateRequestsInput struct {
-	AccountID  string    `json:"accountId,omitempty"`
-	RequestID  *string   `json:"requestId,omitempty"`
-	Types      []*string `json:"types,omitempty"`
-	BaseAssets []*string `json:"baseAssets,omitempty"`
-	FromDate   *string   `json:"fromDate,omitempty"`
-	ToDate     *string   `json:"toDate,omitempty"`
-	Limit      *int      `json:"limit,omitempty"`
-	Offset     *int      `json:"offset,omitempty"`
-}
-
-type ListClientAccountMandateRequestsOutput struct {
-	Requests []ClientAccountMandateRequest `json:"requests"`
-}
-
-// ListClientAccountMandateRequests lists mandate requests for a client account.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/query" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "list_client_account_mandate_requests",
-//	  "payload": {
-//	    "accountId": "<accountId>",
-//	    "requestId": "<requestId>",
-//	    "types": ["<types>"],
-//	    "baseAssets": ["<baseAssets>"],
-//	    "fromDate": "<fromDate>",
-//	    "toDate": "<toDate>",
-//	    "limit": <limit>,
-//	    "offset": "<offset>",
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrInsufficientAccess]
-//   - [ErrInvalidParameter]
-//   - [ErrInvalidAccountExperience]
-//   - [ErrInternal]
-func (c *Client) ListClientAccountMandateRequests(ctx context.Context, input *ListClientAccountMandateRequestsInput) (output *ListClientAccountMandateRequestsOutput, err error) {
-	err = c.query(ctx, "list_client_account_mandate_requests", input, &output)
-	return output, err
 }
 
 type Promo struct {
@@ -1743,84 +1631,6 @@ func (c *Client) CreateRequestCancellation(ctx context.Context, input *CreateReq
 	return output, err
 }
 
-// CreateWithdrawalRequestInput represents the payload for creating a withdrawal request (DIM experience).
-type CreateWithdrawalRequestInput struct {
-	// AccountID specifies the identifier of the DIM client account.
-	AccountID string `json:"accountId,omitempty"`
-	// Amount specifies the amount to withdraw.
-	Amount float64 `json:"amount,omitempty"`
-}
-
-// CreateWithdrawalRequestOutput represents the response for a withdrawal request.
-type CreateWithdrawalRequestOutput struct {
-	// RequestID specifies the identifier of the created withdrawal request.
-	RequestID string `json:"requestId,omitempty"`
-}
-
-// CreateWithdrawalRequest initiates a new withdrawal request for a DIM account.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/command" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "create_withdrawal_request",
-//	  "payload": {
-//	    "accountId": "<accountId>",
-//	    "amount": <amount>
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrActionNotAllowedForAccountType]
-//   - [ErrInsufficientAccess]
-//   - [ErrInternal]
-func (c *Client) CreateWithdrawalRequest(ctx context.Context, input *CreateWithdrawalRequestInput) (output *CreateWithdrawalRequestOutput, err error) {
-	err = c.command(ctx, "create_withdrawal_request", input, &output)
-	return output, err
-}
-
-// CreateDepositRequestInput represents the payload for creating a deposit request (DIM experience).
-type CreateDepositRequestInput struct {
-	// AccountID specifies the identifier of the DIM client account.
-	AccountID string `json:"accountId,omitempty"`
-	// Amount specifies the amount to deposit.
-	Amount float64 `json:"amount,omitempty"`
-}
-
-// CreateDepositRequestOutput represents the response for a deposit request.
-type CreateDepositRequestOutput struct {
-	// RequestID specifies the identifier of the created deposit request.
-	RequestID string `json:"requestId,omitempty"`
-}
-
-// CreateDepositRequest initiates a new deposit request for a DIM account.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/command" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "create_deposit_request",
-//	  "payload": {
-//	    "accountId": "<accountId>",
-//	    "amount": <amount>
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrInsufficientAccess]
-//   - [ErrActionNotAllowedForAccountType]
-//   - [ErrInternal]
-func (c *Client) CreateDepositRequest(ctx context.Context, input *CreateDepositRequestInput) (output *CreateDepositRequestOutput, err error) {
-	err = c.command(ctx, "create_deposit_request", input, &output)
-	return output, err
-}
-
 // CreateSuitabilityAssessmentInput represents the payload for submitting a new suitability assessment.
 type CreateSuitabilityAssessmentInput struct {
 	// SuitabilityAssessment contains the details of the assessment being submitted.
@@ -1988,50 +1798,6 @@ type UpdateAccountNameOutput struct {
 //   - [ErrInternal]
 func (c *Client) UpdateAccountName(ctx context.Context, input *UpdateAccountNameInput) (output *UpdateAccountNameOutput, err error) {
 	err = c.command(ctx, "update_account_name", input, &output)
-	return output, err
-}
-
-// CreateDuitnowPaymentInput represents the payload for initiating a DuitNow payment.
-type CreateDuitnowPaymentInput struct {
-	// AccountID specifies the client account ID related to the payment.
-	AccountID string `json:"accountId,omitempty"`
-	// RequestID specifies the related request ID (e.g., deposit or investment) for this payment.
-	RequestID string `json:"requestId,omitempty"`
-	// BankCode specifies the code of the bank from which the DuitNow payment will be initiated.
-	BankCode string `json:"bankCode,omitempty"`
-}
-
-// CreateDuitnowPaymentOutput represents the response for initiating a DuitNow payment.
-type CreateDuitnowPaymentOutput struct {
-	// Url specifies the redirect URL to the bank's payment gateway or instruction page.
-	Url string `json:"url,omitempty"`
-}
-
-// CreateDuitnowPayment creates a payment instruction and provides a redirect URL for DuitNow payment.
-//
-// cURL:
-//
-//	curl -X "POST" "https://external-api.wallet.halogen.my/command" \
-//	  -H 'Authorization: Bearer <JWT>' \
-//	  -H 'Content-Type: application/json; charset=utf-8' \
-//	  -d $'{
-//	  "name": "create_duitnow_payment",
-//	  "payload": {
-//	    "accountId": "<accountId>",
-//	    "requestId": "<requestId>",
-//	    "bankCode": "<bankCode>"
-//	  }
-//	}'
-//
-// Errors:
-//   - [ErrMissingParameter]
-//   - [ErrInsufficientAccess]
-//   - [ErrDuitNowInvalidParameter]
-//   - [ErrDuitNowUnavailable]
-//   - [ErrMissingResource]
-//   - [ErrInternal]
-func (c *Client) CreateDuitnowPayment(ctx context.Context, input *CreateDuitnowPaymentInput) (output *CreateDuitnowPaymentOutput, err error) {
-	err = c.command(ctx, "create_duitnow_payment", input, &output)
 	return output, err
 }
 
