@@ -103,9 +103,8 @@
 //			FundID:            fundID,
 //			FundClassSequence: fundClassSequence,
 //			Amount:            investmentAmount,
-//			Consents: map[string]bool{
-//				"IM": true,
-//			},
+//			ConsentFundIM:     true,
+//			ConsentHighRisk:   true,
 //		})
 //		if err != nil {
 //			log.Fatal(err)
