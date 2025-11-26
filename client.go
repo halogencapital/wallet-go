@@ -14,7 +14,7 @@ import (
 
 const (
 	endpoint  string = "https://external-api.wallet.halogen.my"
-	version   string = "0.0.1"
+	version   string = "0.0.8"
 	userAgent string = "wallet/" + version + " lang/go"
 )
 
@@ -58,7 +58,8 @@ retry:
 		}
 	}
 	// clean up the memory when CredentialsLoaderFunc is set.
-	token, err := newToken(keyID, "/query", reqBody, 1*time.Hour, o.CredentialsLoaderFunc != nil)
+	shouldCleanMemory := o.CredentialsLoaderFunc != nil
+	token, err := newToken(keyID, "/query", reqBody, 10*time.Second, shouldCleanMemory)
 	if err != nil {
 		return err
 	}
@@ -156,7 +157,8 @@ retry:
 		}
 	}
 	// clean up the memory when CredentialsLoaderFunc is set.
-	token, err := newToken(keyID, "/command", reqBody, 1*time.Hour, o.CredentialsLoaderFunc != nil)
+	shouldCleanMemory := o.CredentialsLoaderFunc != nil
+	token, err := newToken(keyID, "/command", reqBody, 10*time.Second, shouldCleanMemory)
 	if err != nil {
 		return err
 	}
