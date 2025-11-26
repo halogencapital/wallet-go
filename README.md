@@ -46,5 +46,5 @@ Checkout https://pkg.go.dev/github.com/halogencapital/wallet-go
 
 ### Rolling out your own client
 
-Checkout [OpenAPI 3.0 specifications](https://github.com/halogencapital/wallet-go/blob/master/openapi.yml).
+Checkout [OpenAPI 3.0 specifications](https://developer.halogen.my/openapi.yml).
 
