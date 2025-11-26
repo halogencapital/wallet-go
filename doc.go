@@ -16,8 +16,6 @@
 //
 // - [Client.GetFund]
 //
-// - [Client.GetRequestByDuitNowEndToEndID]
-//
 // - [Client.GetClientAccountAllocationPerformance]
 //
 // - [Client.GetClientAccountStatement]
@@ -40,13 +38,9 @@
 //
 // - [Client.ListClientSuitabilityAssessments]
 //
-// - [Client.ListDuitNowBanks]
-//
 // - [Client.ListInvestConsents]
 //
 // - [Client.ListBanks]
-//
-// - [Client.ListClientAccountMandateRequests]
 //
 // - [Client.ListClientPromos]
 //
@@ -70,10 +64,6 @@
 //
 // - [Client.CreateRequestCancellation]
 //
-// - [Client.CreateWithdrawalRequest]
-//
-// - [Client.CreateDepositRequest]
-//
 // - [Client.CreateSuitabilityAssessment]
 //
 // - [Client.CreateClientBankAccount]
@@ -81,8 +71,6 @@
 // - [Client.UpdateDisplayCurrency]
 //
 // - [Client.UpdateAccountName]
-//
-// - [Client.CreateDuitnowPayment]
 //
 // - [Client.UpdateClientProfile]
 package wallet
