@@ -1162,22 +1162,6 @@ func (c *Client) ListBanks(ctx context.Context, input *ListBanksInput) (output *
 	return output, err
 }
 
-type ClientAccountMandateRequest struct {
-	ID string `json:"id,omitempty"`
-	// Deposit / Withdraw / Buy / Sell
-	Type string `json:"type,omitempty"`
-
-	BaseAsset  string  `json:"baseAsset,omitempty"`
-	BaseAmount float64 `json:"baseAmount,omitempty"`
-
-	QuoteAsset  string  `json:"quoteAsset,omitempty"`
-	QuoteAmount float64 `json:"quoteAmount,omitempty"`
-
-	UnitPrice float64 `json:"unitPrice,omitempty"`
-	Status    string  `json:"status,omitempty"`
-	CreatedAt string  `json:"createdAt,omitempty"`
-}
-
 type Promo struct {
 	AccountID          string  `json:"accountId,omitempty"`
 	AccountName        string  `json:"accountName,omitempty"`
