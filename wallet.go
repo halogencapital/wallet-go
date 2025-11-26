@@ -423,7 +423,7 @@ type GetClientProfileOutput struct {
 	Status string `json:"status,omitempty"`
 }
 
-// GetClientProfile retrieves the profile details of a client.
+// GetClientProfile retrieves detailed profile information including personal and demographic data for the authenticated client.
 //
 // cURL:
 //
@@ -557,7 +557,7 @@ type GetFundOutput struct {
 	Fund *Fund `json:"fund,omitempty"`
 }
 
-// GetFund retrieves the details of a specific fund.
+// GetFund retrieves detailed information about a specific fund including its characteristics, fees, and investment requirements.
 //
 // cURL:
 //
@@ -603,7 +603,7 @@ type GetClientAccountAllocationPerformanceOutput struct {
 	Performance []AllocationPerformance `json:"performance"`
 }
 
-// GetClientAccountAllocationPerformance retrieves the performance data for a specific account allocation.
+// GetClientAccountAllocationPerformance retrieves historical performance metrics for a specific fund allocation within an account over a defined timeframe.
 //
 // cURL:
 //
@@ -645,7 +645,7 @@ type GetClientAccountStatementOutput struct {
 	Bytes    []byte `json:"bytes,omitempty"`
 }
 
-// GetClientAccountStatement retrieves the account statement for a given date range.
+// GetClientAccountStatement retrieves the account statement as a document (PDF or HTML) for transactions within a specified date range.
 //
 // cURL:
 //
@@ -685,7 +685,7 @@ type GetClientAccountRequestConfirmationOutput struct {
 	Bytes    []byte `json:"bytes,omitempty"`
 }
 
-// GetClientAccountRequestConfirmation retrieves the confirmation document for a specific request.
+// GetClientAccountRequestConfirmation retrieves the confirmation document for a specific investment, redemption, or switch request.
 //
 // cURL:
 //
@@ -719,7 +719,7 @@ type GetClientReferralOutput struct {
 	ReferredClientsCount int    `json:"referredClientsCount"`
 }
 
-// GetClientReferral retrieves the referral information for the client.
+// GetClientReferral retrieves the client's referral code and the count of successfully referred clients.
 //
 // cURL:
 //
@@ -764,7 +764,7 @@ type GetClientAccountRequestPolicyOutput struct {
 	Participants []PolicyParticipant `json:"participants"`
 }
 
-// GetClientAccountRequestPolicy retrieves the approval policy for a specific request.
+// GetClientAccountRequestPolicy retrieves the approval policy and participant information for a specific account request.
 //
 // cURL:
 //
@@ -797,7 +797,7 @@ type ListFundsForSubscriptionOutput struct {
 	Funds []Fund `json:"funds"`
 }
 
-// ListFundsForSubscription lists funds available for subscription for a given account.
+// ListFundsForSubscription lists all funds available for investment within a specific account based on the account's investor category and experience.
 //
 // cURL:
 //
@@ -851,7 +851,7 @@ type ListClientAccountBalanceOutput struct {
 	Balance []*Balance `json:"balance,omitempty"`
 }
 
-// ListClientAccountBalance lists the balance of a specific client account.
+// ListClientAccountBalance lists the current holdings and balances for each fund allocation in a specific account.
 //
 // cURL:
 //
@@ -941,7 +941,7 @@ type ListClientAccountRequestsOutput struct {
 	Requests []ClientAccountRequest `json:"requests"`
 }
 
-// ListClientAccountRequests lists requests (investments, redemptions, etc.) for a specific account.
+// ListClientAccountRequests lists all transaction requests (investments, redemptions, switches) for a specific account with optional filtering and pagination.
 //
 // cURL:
 //
@@ -973,7 +973,7 @@ type ListClientBankAccountsOutput struct {
 	BankAccounts []BankAccount `json:"bankAccounts"`
 }
 
-// ListClientBankAccounts lists all bank accounts registered to the client.
+// ListClientBankAccounts lists all bank accounts registered to the client that can be used for fund transfers and redemptions.
 //
 // cURL:
 //
@@ -1008,7 +1008,7 @@ type ListDisplayCurrenciesOutput struct {
 	Currencies      []DisplayCurrency `json:"currencies"`
 }
 
-// ListDisplayCurrencies lists the available currencies for display purposes.
+// ListDisplayCurrencies lists all available currencies that can be used to display portfolio values and transactions.
 //
 // cURL:
 //
@@ -1054,7 +1054,7 @@ type ListClientSuitabilityAssessmentsOutput struct {
 	Assessments                    []SuitabilityAssessment `json:"assessments"`
 }
 
-// ListClientSuitabilityAssessments lists the suitability assessments associated with the client.
+// ListClientSuitabilityAssessments lists all suitability assessments completed by the client, including risk tolerance evaluations.
 //
 // cURL:
 //
@@ -1091,7 +1091,7 @@ type ListInvestConsentsOutput struct {
 	ConsentHighRisk bool      `json:"consentHighRisk,omitempty"`
 }
 
-// ListInvestConsents lists the required consents for a specific investment.
+// ListInvestConsents lists the required consent types that must be obtained before making an investment in a specific fund.
 //
 // cURL:
 //
@@ -1131,7 +1131,7 @@ type ListBanksOutput struct {
 	Banks []Bank `json:"banks"`
 }
 
-// ListBanks lists the supported banks for the platform.
+// ListBanks lists all banks supported by the platform for withdrawing funds.
 //
 // cURL:
 //
@@ -1188,7 +1188,7 @@ type ListClientPromosOutput struct {
 	Promos []Promo `json:"promos"`
 }
 
-// ListClientPromos lists available promotions for the client.
+// ListClientPromos lists available promotional offers and vouchers that can be applied to client investments.
 //
 // cURL:
 //
@@ -1225,7 +1225,7 @@ type ListClientAccountPerformanceOutput struct {
 	Performance []ClientAccountPerformance `json:"performance,omitempty"`
 }
 
-// ListClientAccountPerformance lists the historical performance of client accounts.
+// ListClientAccountPerformance lists historical performance data for one or more client accounts over a specified timeframe.
 //
 // cURL:
 //
@@ -1259,7 +1259,7 @@ type ListPaymentMethodsOutput struct {
 	BankTransfer bool `json:"bankTransfer"`
 }
 
-// ListPaymentMethods lists the available payment methods.
+// ListPaymentMethods lists the available payment methods for fund transfers, such as DuitNow and bank transfers.
 //
 // cURL:
 //
@@ -1298,7 +1298,7 @@ type GetVoucherOutput struct {
 	PostFeeAmount                    float64 `json:"postFeeAmount"`
 }
 
-// GetVoucher retrieves details of a specific voucher.
+// GetVoucher retrieves details and validates a specific voucher code, calculating the discounted fees for an investment.
 //
 // cURL:
 //
@@ -1341,7 +1341,7 @@ type GetPreviewInvestOutput struct {
 	DefaultVoucher                   *GetVoucherOutput `json:"defaultVoucher,omitempty"`
 }
 
-// GetPreviewInvest calculates a preview of an investment, including fees.
+// GetPreviewInvest calculates a preview of an investment transaction, including applicable fees and any default voucher discounts.
 //
 // cURL:
 //
@@ -1378,7 +1378,7 @@ type GetProjectedFundPriceOutput struct {
 	NetAssetValuePerUnit float64 `json:"netAssetValuePerUnit"`
 }
 
-// GetProjectedFundPrice retrieves the projected price for a fund.
+// GetProjectedFundPrice retrieves the current or projected unit net asset value (NAV) for a specific fund class.
 //
 // cURL:
 //
@@ -1430,7 +1430,7 @@ type CreateInvestmentRequestOutput struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-// CreateInvestmentRequest initiates a new investment request for a specified amount into a fund class.
+// CreateInvestmentRequest submits a new investment request to purchase units in a specified fund class with the provided amount.
 //
 // cURL:
 //
@@ -1483,7 +1483,7 @@ type CreateRedemptionRequestOutput struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-// CreateRedemptionRequest initiates a new redemption request (selling units or withdrawing an amount) from a fund class.
+// CreateRedemptionRequest submits a new redemption request to sell fund units or withdraw an amount from an account.
 //
 // cURL:
 //
@@ -1540,7 +1540,7 @@ type CreateSwitchRequestOutput struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-// CreateSwitchRequest initiates a new request to switch funds/units within the client account.
+// CreateSwitchRequest submits a request to transfer units from one fund to another within the same account.
 //
 // cURL:
 //
@@ -1584,7 +1584,7 @@ type CreateRequestCancellationInput struct {
 type CreateRequestCancellationOutput struct {
 }
 
-// CreateRequestCancellation cancels a pending request (e.g., investment, redemption, switch).
+// CreateRequestCancellation cancels a pending transaction request (investment, redemption, or switch) before it is executed.
 //
 // cURL:
 //
@@ -1622,7 +1622,7 @@ type CreateSuitabilityAssessmentOutput struct {
 	SuitabilityAssessmentID string `json:"suitabilityAssessmentId,omitempty"`
 }
 
-// CreateSuitabilityAssessment submits a new suitability assessment for the client.
+// CreateSuitabilityAssessment submits a new risk suitability assessment for the client, evaluating investment risk tolerance.
 //
 // cURL:
 //
@@ -1659,7 +1659,7 @@ type CreateClientBankAccountInput struct {
 type CreateClientBankAccountOutput struct {
 }
 
-// CreateClientBankAccount adds a new bank account to the client's profile.
+// CreateClientBankAccount registers a new bank account with the client's profile for receiving redemption proceeds.
 //
 // cURL:
 //
@@ -1697,7 +1697,7 @@ type UpdateDisplayCurrencyInput struct {
 type UpdateDisplayCurrencyOutput struct {
 }
 
-// UpdateDisplayCurrency sets the preferred display currency for the client's accounts.
+// UpdateDisplayCurrency changes the currency in which the client's portfolio values and transactions are displayed.
 //
 // cURL:
 //
@@ -1733,7 +1733,7 @@ type UpdateAccountNameInput struct {
 type UpdateAccountNameOutput struct {
 }
 
-// UpdateAccountName updates the friendly name of a client account.
+// UpdateAccountName changes the friendly name or label of a specific client investment account.
 //
 // cURL:
 //
@@ -1779,7 +1779,7 @@ type UpdateClientProfileInput struct {
 type UpdateClientProfileOutput struct {
 }
 
-// UpdateClientProfile updates the client's demographic and tax-related profile details.
+// UpdateClientProfile updates the client's demographic information, ethnicity, and tax residency details.
 //
 // cURL:
 //
