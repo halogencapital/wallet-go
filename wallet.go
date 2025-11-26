@@ -615,6 +615,8 @@ type GetClientAccountAllocationPerformanceOutput struct {
 //	  "payload": {
 //	    "accountId": "<accountId>",
 //	    "allocationId": "<allocationId>",
+//	    "type": "<type>",
+//	    "fundClassSequence": "<fundClassSequence>",
 //	    "timeframe": "<timeframe>",
 //	    "interval": "<interval>"
 //	  }
@@ -952,7 +954,15 @@ type ListClientAccountRequestsOutput struct {
 //	  "name": "list_client_account_requests",
 //	  "payload": {
 //	    "accountId": "<accountId>",
-//	    "limit": <limit>
+//	    "requestId": "<requestId>",
+//	    "fundIds": ["<fundIds>"],
+//	    "fromDate": "<fromDate>",
+//	    "toDate": "<toDate>",
+//	    "types": "<types>",
+//	    "statuses": "<statuses>",
+//	    "limit": <limit>,
+//	    "offset": <offset>,
+//	    "completedOnly": <completedOnly>,
 //	  }
 //	}'
 //
@@ -1310,7 +1320,7 @@ type GetVoucherOutput struct {
 //	  "payload": {
 //	    "accountId": "<accountId>",
 //	    "fundId": "<fundId>",
-//	    "fundClassSequence": <fundClassSequence>
+//	    "fundClassSequence": <fundClassSequence>,
 //	    "amount": <amount>,
 //	    "voucherCode": "<voucherCode>"
 //	  }
@@ -1353,7 +1363,7 @@ type GetPreviewInvestOutput struct {
 //	  "payload": {
 //	    "accountId": "<accountId>",
 //	    "fundId": "<fundId>",
-//	    "fundClassSequence": <fundClassSequence>
+//	    "fundClassSequence": <fundClassSequence>,
 //	    "amount": <amount>
 //	  }
 //	}'
@@ -1444,9 +1454,12 @@ type CreateInvestmentRequestOutput struct {
 //	    "fundId": "<fundId>",
 //	    "fundClassSequence": <fundClassSequence>
 //	    "amount": <amount>,
+//	    "consentFundIM": <consentFundIM>,
+//	    "consentHighRisk": <consentHighRisk>,
 //	    "consents": {
 //	      "IM": true
-//	    }
+//	    },
+//	    "voucherCode": <voucherCode>
 //	  }
 //	}'
 //
@@ -1497,6 +1510,7 @@ type CreateRedemptionRequestOutput struct {
 //	    "fundId": "<fundId>",
 //	    "fundClassSequence": <fundClassSequence>
 //	    "requestedAmount": <amount>,
+//	    "units": <units>,
 //	    "toBankAccountNumber": "<toBankAccountNumber>"
 //	  }
 //	}'
@@ -1552,10 +1566,11 @@ type CreateSwitchRequestOutput struct {
 //	  "payload": {
 //	    "accountId": "<accountId>",
 //	    "switchFromFundId": "<switchFromFundId>",
-//	    "switchFromFundClassSequence": <fundClassSequence>
+//	    "switchFromFundClassSequence": <fundClassSequence>,
 //	    "switchToFundId": "<switchToFundId>",
-//	    "switchToFundClassSequence": <switchToFundClassSequence>
-//	    "requestedAmount": <amount>
+//	    "switchToFundClassSequence": <switchToFundClassSequence>,
+//	    "requestedAmount": <amount>,
+//	    "units": <units>
 //	  }
 //	}'
 //
@@ -1633,8 +1648,19 @@ type CreateSuitabilityAssessmentOutput struct {
 //	  "name": "create_suitability_assessment",
 //	  "payload": {
 //	    "suitabilityAssessment": {
+//	      "id": "<id>",
+//	      "clientId": "<clientId>",
+//	      "source": "<source>",
+//	      "investmentExperience": "<investmentExperience>",
+//	      "investmentObjective": "<investmentObjective>",
+//	      "investmentHorizon": "<investmentHorizon>",
+//	      "currentInvestment": "<currentInvestment>",
+//	      "returnExpectations": "<returnExpectations>",
+//	      "attachment": "<attachment>",
+//	      "totalScore": <totalScore>,
 //	      "riskTolerance": "<riskTolerance>",
-//	      "totalScore": <totalScore>
+//	      "createdBy": "<createdBy>",
+//	      "createdAt": "<createdAt>"
 //	    }
 //	  }
 //	}'
@@ -1671,7 +1697,18 @@ type CreateClientBankAccountOutput struct {
 //	  "payload": {
 //	    "bankAccount": {
 //	      "accountNumber": "<accountNumber>",
-//	      "bankName": "<bankName>"
+//	      "accountName": "<accountName>",
+//	      "accountCurrency": "<accountCurrency>",
+//	      "accountType": "<accountType>",
+//	      "accountType": "<accountType>",
+//	      "bankName": "<bankName>",
+//	      "bankBic": "<bankBic>",
+//	      "referenceNumber": "<referenceNumber>",
+//	      "imageUrl": "<imageUrl>",
+//	      "status": "<status>",
+//	      "source": "<source>",
+//	      "createdAt": "<createdAt>",
+//	      "createdBy": "<createdBy>"
 //	    }
 //	  }
 //	}'
@@ -1790,7 +1827,11 @@ type UpdateClientProfileOutput struct {
 //	  "name": "update_client_profile",
 //	  "payload": {
 //	    "ethnicity": "<ethnicity>",
-//	    "taxResidency": "<taxResidency>"
+//	    "otherEthnicity": "<otherEthnicity>",
+//	    "domesticRinggitBorrowing": "<domesticRinggitBorrowing>",
+//	    "taxResidency": "<taxResidency>",
+//	    "countryTax": "<countryTax>",
+//	    "taxIdentificationNo": "<taxIdentificationNo>"
 //	  }
 //	}'
 //
