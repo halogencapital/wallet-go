@@ -8,19 +8,27 @@ import (
 )
 
 const (
+	// AccountTypeSingle indicates an account owned by one individual.
 	AccountTypeSingle string = "single"
-	AccountTypeJoint  string = "joint"
+	// AccountTypeJoint indicates an account owned by two individuals.
+	AccountTypeJoint string = "joint"
 
+	// AccountExperienceFundManagement indicates the account is used for wholesale fund investments.
 	AccountExperienceFundManagement string = "fundmanagement"
-	AccountExperienceMandate        string = "mandate"
-	AccountExperienceDim            string = "dim"
+	// AccountExperienceMandate indicates the account is used for private mandates.
+	AccountExperienceMandate string = "mandate"
+	// AccountExperienceDim indicates the account is used for Diversified Investment Mandates.
+	AccountExperienceDim string = "dim"
 )
 
+// Client is the main entry point for the Wallet SDK. It holds configuration
+// and credentials required to interact with the API.
 type Client struct {
 	options     *Options
 	credentials *credentials
 }
 
+// Options contains configuration settings for the Client.
 type Options struct {
 	// CredentialsLoaderFunc is responsible for retreiving credentials to enable the client
 	// sending authenticated requests. This is recommended over [wallet.Client.SetCredentials] which
@@ -51,6 +59,7 @@ type Options struct {
 	Debug bool
 }
 
+// New creates a new instance of the Client with the provided options.
 func New(opts ...*Options) *Client {
 	defaultOptions := Options{
 		HTTPClient:    &http.Client{Timeout: 10 * time.Second},
@@ -85,6 +94,7 @@ func New(opts ...*Options) *Client {
 	}
 }
 
+// credentials holds the authentication details for signing requests.
 type credentials struct {
 	keyID         string
 	privateKeyPEM []byte
@@ -208,13 +218,15 @@ type ClientAccount struct {
 	CanUpdateAccountName bool `json:"canUpdateAccountName"`
 }
 
+// ListClientAccountsInput contains parameters for filtering the list of client accounts.
 type ListClientAccountsInput struct {
 	// AccountIDs filters the list of returned accounts.
 	//
-	// Optional, if not set, all accounts associated with the client are returned.
+	// Optional. If not set, all accounts associated with the client are returned.
 	AccountIDs []string `json:"accountIds,omitempty"`
 }
 
+// ListClientAccountsOutput contains the list of client accounts and summary data.
 type ListClientAccountsOutput struct {
 	// Amount is the total value of all returned accounts.
 	Amount float64 `json:"amount"`
@@ -253,6 +265,7 @@ func (c *Client) ListClientAccounts(ctx context.Context, input *ListClientAccoun
 	return output, err
 }
 
+// Address represents a physical mailing or residential address.
 type Address struct {
 	// Type specifies whether the address is "permanent" or "correspondence".
 	Type string `json:"type,omitempty"`
@@ -274,9 +287,11 @@ type Address struct {
 	Country string `json:"country,omitempty"`
 }
 
+// GetClientProfileInput is the input for retrieving the client profile.
 type GetClientProfileInput struct {
 }
 
+// GetClientProfileOutput contains detailed personal and demographic information about the client.
 type GetClientProfileOutput struct {
 	// Name is the full name of the client as per official documents.
 	//
@@ -444,6 +459,7 @@ func (c *Client) GetClientProfile(ctx context.Context, input *GetClientProfileIn
 	return output, err
 }
 
+// Fund represents an investment product available on the platform.
 type Fund struct {
 	// ID specifies the hexadecimal representation of the Fund identifier. 20 bytes
 	// in length (40 hexadecimal characters).
@@ -519,41 +535,75 @@ type Fund struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
+// FundClass represents a specific class or tranche within a fund, usually differing by fee structure or currency.
 type FundClass struct {
-	Sequence                    int                    `json:"sequence,omitempty"`
-	Label                       string                 `json:"label,omitempty"`
-	BaseCurrency                string                 `json:"baseCurrency,omitempty"`
-	ManagementFee               float64                `json:"managementFee,omitempty"`
-	TrusteeFee                  float64                `json:"trusteeFee,omitempty"`
-	CustodianFee                float64                `json:"custodianFee,omitempty"`
-	TransferFee                 float64                `json:"transferFee,omitempty"`
-	TrusteeFeeAnnualMinimum     float64                `json:"trusteeFeeAnnualMinimum,omitempty"`
-	SwitchingFee                float64                `json:"switchingFee,omitempty"`
-	SubscriptionFee             float64                `json:"subscriptionFee,omitempty"`
-	RedemptionFee               float64                `json:"redemptionFee,omitempty"`
-	PerformanceFee              float64                `json:"performanceFee,omitempty"`
-	TaxRate                     float64                `json:"taxRate,omitempty"`
-	MinimumInitialInvestment    float64                `json:"minimumInitialInvestment,omitempty"`
-	MinimumAdditionalInvestment float64                `json:"minimumAdditionalInvestment,omitempty"`
-	MinimumUnitsHeld            float64                `json:"minimumUnitsHeld,omitempty"`
-	MinimumRedemptionAmount     float64                `json:"minimumRedemptionAmount,omitempty"`
-	CanDistribute               bool                   `json:"canDistribute,omitempty"`
-	LaunchPrice                 float64                `json:"launchPrice,omitempty"`
-	HexColor                    string                 `json:"hexColor,omitempty"`
-	CommencementAt              string                 `json:"commencementAt,omitempty"`
-	InitialOfferingPeriodFrom   string                 `json:"initialOfferingPeriodFrom,omitempty"`
-	InitialOfferingPeriodTo     string                 `json:"initialOfferingPeriodTo,omitempty"`
-	CreatedAt                   string                 `json:"createdAt,omitempty"`
-	DistributionFrequency       string                 `json:"distributionFrequency,omitempty"`
-	TagLine                     string                 `json:"tagLine,omitempty"`
-	Metadata                    map[string]interface{} `json:"metadata,omitempty"`
+	// Sequence is the unique identifier index for this class within the fund.
+	Sequence int `json:"sequence,omitempty"`
+	// Label is the display name of the class (e.g., "Class A").
+	Label string `json:"label,omitempty"`
+	// BaseCurrency is the currency in which this class is denominated.
+	BaseCurrency string `json:"baseCurrency,omitempty"`
+	// ManagementFee is the annual percentage fee charged by the manager.
+	ManagementFee float64 `json:"managementFee,omitempty"`
+	// TrusteeFee is the annual percentage fee charged by the trustee.
+	TrusteeFee float64 `json:"trusteeFee,omitempty"`
+	// CustodianFee is the annual percentage fee charged for asset custody.
+	CustodianFee float64 `json:"custodianFee,omitempty"`
+	// TransferFee is the fee charged for transferring units.
+	TransferFee float64 `json:"transferFee,omitempty"`
+	// TrusteeFeeAnnualMinimum is the minimum monetary amount charged by the trustee annually.
+	TrusteeFeeAnnualMinimum float64 `json:"trusteeFeeAnnualMinimum,omitempty"`
+	// SwitchingFee is the percentage fee charged when switching between funds.
+	SwitchingFee float64 `json:"switchingFee,omitempty"`
+	// SubscriptionFee is the percentage fee charged upon initial investment.
+	SubscriptionFee float64 `json:"subscriptionFee,omitempty"`
+	// RedemptionFee is the percentage fee charged upon withdrawal.
+	RedemptionFee float64 `json:"redemptionFee,omitempty"`
+	// PerformanceFee is the percentage of profits charged if the fund outperforms its benchmark.
+	PerformanceFee float64 `json:"performanceFee,omitempty"`
+	// TaxRate is the applicable tax rate for this fund class.
+	TaxRate float64 `json:"taxRate,omitempty"`
+	// MinimumInitialInvestment is the minimum amount required to open an investment in this class.
+	MinimumInitialInvestment float64 `json:"minimumInitialInvestment,omitempty"`
+	// MinimumAdditionalInvestment is the minimum amount required for subsequent investments.
+	MinimumAdditionalInvestment float64 `json:"minimumAdditionalInvestment,omitempty"`
+	// MinimumUnitsHeld is the minimum number of units that must be maintained in the account.
+	MinimumUnitsHeld float64 `json:"minimumUnitsHeld,omitempty"`
+	// MinimumRedemptionAmount is the minimum value allowed for a withdrawal request.
+	MinimumRedemptionAmount float64 `json:"minimumRedemptionAmount,omitempty"`
+	// CanDistribute reports whether this class pays out distributions (dividends).
+	CanDistribute bool `json:"canDistribute,omitempty"`
+	// LaunchPrice is the initial NAV per unit when the class was launched.
+	LaunchPrice float64 `json:"launchPrice,omitempty"`
+	// HexColor is the visual color code associated with this class.
+	HexColor string `json:"hexColor,omitempty"`
+	// CommencementAt is the date the fund class started operations.
+	CommencementAt string `json:"commencementAt,omitempty"`
+	// InitialOfferingPeriodFrom is the start date of the initial offering period.
+	InitialOfferingPeriodFrom string `json:"initialOfferingPeriodFrom,omitempty"`
+	// InitialOfferingPeriodTo is the end date of the initial offering period.
+	InitialOfferingPeriodTo string `json:"initialOfferingPeriodTo,omitempty"`
+	// CreatedAt is the timestamp when this record was created.
+	CreatedAt string `json:"createdAt,omitempty"`
+	// DistributionFrequency describes how often distributions are paid (e.g., "Quarterly").
+	DistributionFrequency string `json:"distributionFrequency,omitempty"`
+	// TagLine is a short marketing descriptor for this class.
+	TagLine string `json:"tagLine,omitempty"`
+	// Metadata contains arbitrary additional data for this class.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
+// GetFundInput is the input for retrieving specific fund details.
 type GetFundInput struct {
+	// FundID is the unique identifier of the fund to retrieve.
+	//
+	// Required.
 	FundID string `json:"fundId,omitempty"`
 }
 
+// GetFundOutput contains the full details of the requested fund.
 type GetFundOutput struct {
+	// Fund contains the fund details.
 	Fund *Fund `json:"fund,omitempty"`
 }
 
@@ -581,25 +631,53 @@ func (c *Client) GetFund(ctx context.Context, input *GetFundInput) (output *GetF
 	return output, err
 }
 
+// AllocationPerformance represents a data point for fund performance at a specific time.
 type AllocationPerformance struct {
-	Date                 string  `json:"date,omitempty"`
-	Units                float64 `json:"units,omitempty"`
-	Asset                string  `json:"asset,omitempty"`
+	// Date is the timestamp of the performance data point.
+	Date string `json:"date,omitempty"`
+	// Units is the number of units held at this time.
+	Units float64 `json:"units,omitempty"`
+	// Asset is the currency or asset symbol.
+	Asset string `json:"asset,omitempty"`
+	// NetAssetValuePerUnit is the price per unit at this time.
 	NetAssetValuePerUnit float64 `json:"netAssetValuePerUnit,omitempty"`
-	Value                float64 `json:"value,omitempty"`
-	PostFeeAmount        float64 `json:"postFeeAmount,omitempty"`
+	// Value is the total value of the holding.
+	Value float64 `json:"value,omitempty"`
+	// PostFeeAmount is the value after accounting for accrued fees.
+	PostFeeAmount float64 `json:"postFeeAmount,omitempty"`
 }
 
+// GetClientAccountAllocationPerformanceInput is the input for retrieving performance data.
 type GetClientAccountAllocationPerformanceInput struct {
-	AccountID         string `json:"accountId,omitempty"`
-	AllocationID      string `json:"allocationId,omitempty"`
-	Type              string `json:"type,omitempty"`
-	FundClassSequence int    `json:"fundClassSequence,omitempty"`
-	Timeframe         string `json:"timeframe,omitempty"`
-	Interval          string `json:"interval,omitempty"`
+	// AccountID is the ID of the client account.
+	//
+	// Required.
+	AccountID string `json:"accountId,omitempty"`
+	// AllocationID is the ID of the specific fund allocation.
+	//
+	// Required.
+	AllocationID string `json:"allocationId,omitempty"`
+	// Type specifies the data type to retrieve. (e.g., "fund", "spot")
+	//
+	// Required.
+	Type string `json:"type,omitempty"`
+	// FundClassSequence identifies the specific class of the fund.
+	//
+	// Optional. Required only if Type is "fund".
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
+	//
+	// Required.
+	// Timeframe specifies the duration of data to retrieve (e.g., "3M", "YTD").
+	Timeframe string `json:"timeframe,omitempty"`
+	// Interval specifies the granularity of data points (e.g., "day", "week").
+	//
+	// Required.
+	Interval string `json:"interval,omitempty"`
 }
 
+// GetClientAccountAllocationPerformanceOutput contains the list of performance data points.
 type GetClientAccountAllocationPerformanceOutput struct {
+	// Performance is a slice of historical performance data points.
 	Performance []AllocationPerformance `json:"performance"`
 }
 
@@ -632,19 +710,38 @@ func (c *Client) GetClientAccountAllocationPerformance(ctx context.Context, inpu
 	return output, err
 }
 
+// GetClientAccountStatementInput is the input for generating account statements.
 type GetClientAccountStatementInput struct {
+	// AccountID is the ID of the account.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
-	FromDate  string `json:"fromDate,omitempty"`
-	ToDate    string `json:"toDate,omitempty"`
-	Format    string `json:"format"`
+	// FromDate is the start date for the statement range.
+	//
+	// Required.
+	FromDate string `json:"fromDate,omitempty"`
+	// ToDate is the end date for the statement range.
+	//
+	// Required.
+	ToDate string `json:"toDate,omitempty"`
+	// Format specifies the output format.
+	//
+	// Optional. Defaults to "pdf" if not specified.
+	Format string `json:"format"`
 }
 
+// GetClientAccountStatementOutput contains the generated statement file.
 type GetClientAccountStatementOutput struct {
+	// FromDate is the actual start date used in the statement.
 	FromDate string `json:"fromDate,omitempty"`
-	ToDate   string `json:"toDate,omitempty"`
-	Format   string `json:"format,omitempty"`
+	// ToDate is the actual end date used in the statement.
+	ToDate string `json:"toDate,omitempty"`
+	// Format is the format of the generated file.
+	Format string `json:"format,omitempty"`
+	// Filename is the suggested name for the downloaded file.
 	Filename string `json:"filename,omitempty"`
-	Bytes    []byte `json:"bytes,omitempty"`
+	// Bytes contains the raw binary data of the statement file.
+	Bytes []byte `json:"bytes,omitempty"`
 }
 
 // GetClientAccountStatement retrieves the account statement as a document (PDF or HTML) for transactions within a specified date range.
@@ -675,16 +772,30 @@ func (c *Client) GetClientAccountStatement(ctx context.Context, input *GetClient
 	return output, err
 }
 
+// GetClientAccountRequestConfirmationInput is the input for retrieving a transaction confirmation note.
 type GetClientAccountRequestConfirmationInput struct {
+	// AccountID is the ID of the account.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
+	// RequestID is the ID of the transaction request.
+	//
+	// Optional.
 	RequestID string `json:"requestId,omitempty"`
-	Format    string `json:"format,omitempty"`
+	// Format specifies the output format (e.g., "pdf").
+	//
+	// Optional. Defaults to "pdf" if not specified.
+	Format string `json:"format,omitempty"`
 }
 
+// GetClientAccountRequestConfirmationOutput contains the generated confirmation note.
 type GetClientAccountRequestConfirmationOutput struct {
-	Format   string `json:"format,omitempty"`
+	// Format is the format of the generated file.
+	Format string `json:"format,omitempty"`
+	// Filename is the suggested name for the downloaded file.
 	Filename string `json:"filename,omitempty"`
-	Bytes    []byte `json:"bytes,omitempty"`
+	// Bytes contains the raw binary data of the confirmation note.
+	Bytes []byte `json:"bytes,omitempty"`
 }
 
 // GetClientAccountRequestConfirmation retrieves the confirmation document for a specific investment, redemption, or switch request.
@@ -713,12 +824,16 @@ func (c *Client) GetClientAccountRequestConfirmation(ctx context.Context, input 
 	return output, err
 }
 
+// GetClientReferralInput is the input for retrieving referral details.
 type GetClientReferralInput struct {
 }
 
+// GetClientReferralOutput contains the client's referral code and statistics.
 type GetClientReferralOutput struct {
-	ReferralCode         string `json:"referralCode,omitempty"`
-	ReferredClientsCount int    `json:"referredClientsCount"`
+	// ReferralCode is the unique code used to refer new clients.
+	ReferralCode string `json:"referralCode,omitempty"`
+	// ReferredClientsCount is the number of clients successfully referred.
+	ReferredClientsCount int `json:"referredClientsCount"`
 }
 
 // GetClientReferral retrieves the client's referral code and the count of successfully referred clients.
@@ -742,27 +857,47 @@ func (c *Client) GetClientReferral(ctx context.Context, input *GetClientReferral
 	return output, err
 }
 
+// PolicyGroup represents a group of approvers or rules within a policy.
 type PolicyGroup struct {
+	// Label is the name of the policy group.
 	Label string `json:"label,omitempty"`
-	Min   int    `json:"min,omitempty"`
-	Max   int    `json:"max,omitempty"`
+	// Min is the minimum number of approvals required from this group.
+	Min int `json:"min,omitempty"`
+	// Max is the maximum number of approvers in this group.
+	Max int `json:"max,omitempty"`
 }
 
+// PolicyParticipant represents a user involved in the approval policy.
 type PolicyParticipant struct {
-	Email      string `json:"email,omitempty"`
+	// Email is the email address of the participant.
+	Email string `json:"email,omitempty"`
+	// GroupLabel is the label of the group this participant belongs to.
 	GroupLabel string `json:"groupLabel,omitempty"`
-	Name       string `json:"name,omitempty"`
-	Signed     bool   `json:"signed,omitempty"`
-	SignedAt   string `json:"signedAt,omitempty"`
+	// Name is the display name of the participant.
+	Name string `json:"name,omitempty"`
+	// Signed reports whether this participant has approved/signed the request.
+	Signed bool `json:"signed,omitempty"`
+	// SignedAt is the timestamp when the participant signed the request.
+	SignedAt string `json:"signedAt,omitempty"`
 }
 
+// GetClientAccountRequestPolicyInput is the input for retrieving policy details for a request.
 type GetClientAccountRequestPolicyInput struct {
+	// AccountID is the ID of the account.
+	//
+	// Required.
 	AccountID string `json:"accountId"`
+	// RequestID is the ID of the request to check the policy for.
+	//
+	// Required.
 	RequestID string `json:"requestId"`
 }
 
+// GetClientAccountRequestPolicyOutput contains the policy groups and participants for a request.
 type GetClientAccountRequestPolicyOutput struct {
-	Groups       []PolicyGroup       `json:"groups"`
+	// Groups defines the approval requirements.
+	Groups []PolicyGroup `json:"groups"`
+	// Participants lists the users involved in the approval process.
 	Participants []PolicyParticipant `json:"participants"`
 }
 
@@ -791,11 +926,17 @@ func (c *Client) GetClientAccountRequestPolicy(ctx context.Context, input *GetCl
 	return output, err
 }
 
+// ListFundsForSubscriptionInput is the input for listing purchasable funds.
 type ListFundsForSubscriptionInput struct {
+	// AccountID is the ID of the account for which to list eligible funds.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 }
 
+// ListFundsForSubscriptionOutput contains the list of funds available for subscription.
 type ListFundsForSubscriptionOutput struct {
+	// Funds is the list of eligible funds.
 	Funds []Fund `json:"funds"`
 }
 
@@ -822,34 +963,61 @@ func (c *Client) ListFundsForSubscription(ctx context.Context, input *ListFundsF
 	return output, err
 }
 
+// Balance represents the holding of a specific fund within an account.
 type Balance struct {
-	FundID                    string   `json:"fundId,omitempty"`
-	FundClassSequence         int      `json:"fundClassSequence,omitempty"`
-	FundName                  string   `json:"fundName,omitempty"`
-	FundShortName             string   `json:"fundShortName,omitempty"`
-	FundClassLabel            string   `json:"fundClassLabel,omitempty"`
-	FundCode                  string   `json:"fundCode,omitempty"`
-	FundImageUrl              string   `json:"fundImageUrl,omitempty"`
-	Units                     float64  `json:"units,omitempty"`
-	Asset                     string   `json:"asset,omitempty"`
-	Value                     float64  `json:"value,omitempty"`
-	ValuedAt                  string   `json:"valuedAt,omitempty"`
-	MinimumRedemptionAmount   float64  `json:"minimumRedemptionAmount,omitempty"`
-	MinimumRedemptionUnits    float64  `json:"minimumRedemptionUnits,omitempty"`
-	MinimumSubscriptionAmount float64  `json:"minimumSubscriptionAmount,omitempty"`
-	MinimumSubscriptionUnits  float64  `json:"minimumSubscriptionUnits,omitempty"`
-	RedemptionFeePercentage   float64  `json:"redemptionFeePercentage,omitempty"`
-	SwitchFeePercentage       float64  `json:"switchFeePercentage,omitempty"`
-	AvailableModes            []string `json:"availableModes"`
-	IsOutOfService            bool     `json:"isOutOfService"`
-	OutOfServiceMessage       string   `json:"outOfServiceMessage,omitempty"`
+	// FundID is the unique identifier of the fund.
+	FundID string `json:"fundId,omitempty"`
+	// FundClassSequence identifies the specific class of the fund.
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
+	// FundName is the name of the fund.
+	FundName string `json:"fundName,omitempty"`
+	// FundShortName is the short name of the fund.
+	FundShortName string `json:"fundShortName,omitempty"`
+	// FundClassLabel is the label of the fund class.
+	FundClassLabel string `json:"fundClassLabel,omitempty"`
+	// FundCode is the code of the fund.
+	FundCode string `json:"fundCode,omitempty"`
+	// FundImageUrl is the URL to the fund's logo.
+	FundImageUrl string `json:"fundImageUrl,omitempty"`
+	// Units is the quantity of units held.
+	Units float64 `json:"units,omitempty"`
+	// Asset is the currency of the holding.
+	Asset string `json:"asset,omitempty"`
+	// Value is the current market value of the holding.
+	Value float64 `json:"value,omitempty"`
+	// ValuedAt is the date of the last valuation.
+	ValuedAt string `json:"valuedAt,omitempty"`
+	// MinimumRedemptionAmount is the minimum allowed withdrawal amount for this holding.
+	MinimumRedemptionAmount float64 `json:"minimumRedemptionAmount,omitempty"`
+	// MinimumRedemptionUnits is the minimum allowed withdrawal units.
+	MinimumRedemptionUnits float64 `json:"minimumRedemptionUnits,omitempty"`
+	// MinimumSubscriptionAmount is the minimum allowed amount for additional subscriptions.
+	MinimumSubscriptionAmount float64 `json:"minimumSubscriptionAmount,omitempty"`
+	// MinimumSubscriptionUnits is the minimum allowed units for additional subscriptions.
+	MinimumSubscriptionUnits float64 `json:"minimumSubscriptionUnits,omitempty"`
+	// RedemptionFeePercentage is the fee charged on redemption.
+	RedemptionFeePercentage float64 `json:"redemptionFeePercentage,omitempty"`
+	// SwitchFeePercentage is the fee charged on switching.
+	SwitchFeePercentage float64 `json:"switchFeePercentage,omitempty"`
+	// AvailableModes lists the actions available for this holding (e.g., "redeem", "switch").
+	AvailableModes []string `json:"availableModes"`
+	// IsOutOfService reports whether the fund is currently unavailable.
+	IsOutOfService bool `json:"isOutOfService"`
+	// OutOfServiceMessage provides the reason if the fund is out of service.
+	OutOfServiceMessage string `json:"outOfServiceMessage,omitempty"`
 }
 
+// ListClientAccountBalanceInput is the input for listing account balances.
 type ListClientAccountBalanceInput struct {
+	// AccountID is the ID of the account.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 }
 
+// ListClientAccountBalanceOutput contains the list of holdings in the account.
 type ListClientAccountBalanceOutput struct {
+	// Balance is a list of fund holdings.
 	Balance []*Balance `json:"balance,omitempty"`
 }
 
@@ -877,69 +1045,139 @@ func (c *Client) ListClientAccountBalance(ctx context.Context, input *ListClient
 	return output, err
 }
 
+// BankAccount represents a registered bank account for the client.
 type BankAccount struct {
-	AccountNumber   string `json:"accountNumber,omitempty"`
-	AccountName     string `json:"accountName,omitempty"`
+	// AccountNumber is the bank account number.
+	AccountNumber string `json:"accountNumber,omitempty"`
+	// AccountName is the name associated with the bank account.
+	AccountName string `json:"accountName,omitempty"`
+	// AccountCurrency is the currency of the bank account.
 	AccountCurrency string `json:"accountCurrency,omitempty"`
-	AccountType     string `json:"accountType,omitempty"`
-	BankName        string `json:"bankName,omitempty"`
-	BankBic         string `json:"bankBic,omitempty"`
+	// AccountType is the type of the bank account (e.g., "savings", "current").
+	AccountType string `json:"accountType,omitempty"`
+	// BankName is the name of the bank.
+	BankName string `json:"bankName,omitempty"`
+	// BankBic is the BIC/SWIFT code of the bank.
+	BankBic string `json:"bankBic,omitempty"`
+	// ReferenceNumber is an optional reference for the account registration.
 	ReferenceNumber string `json:"referenceNumber,omitempty"`
-	ImageUrl        string `json:"imageUrl,omitempty"`
-	Status          string `json:"status,omitempty"`
-	Source          string `json:"source,omitempty"`
-	CreatedAt       string `json:"createdAt,omitempty"`
-	CreatedBy       string `json:"createdBy,omitempty"`
+	// ImageUrl is a URL to the bank's logo.
+	ImageUrl string `json:"imageUrl,omitempty"`
+	// Status is the verification status of the bank account.
+	Status string `json:"status,omitempty"`
+	// Source indicates how the account was added (e.g., "user").
+	Source string `json:"source,omitempty"`
+	// CreatedAt is the timestamp when the account was added.
+	CreatedAt string `json:"createdAt,omitempty"`
+	// CreatedBy indicates who added the account.
+	CreatedBy string `json:"createdBy,omitempty"`
 }
 
+// ClientAccountRequest represents a transaction request (Investment, Redemption, Switch).
 type ClientAccountRequest struct {
+	// ID is the unique identifier of the request.
 	ID string `json:"id,omitempty"`
 	// fundmanagement: investment, redemption, switch out, switch in
 	// dim: deposit, withdrawal
 	Type string `json:"type,omitempty"`
 
-	FundID         string `json:"fundId,omitempty"`
-	FundName       string `json:"fundName,omitempty"`
-	FundShortName  string `json:"fundShortName,omitempty"`
+	// FundID is the ID of the fund involved.
+	FundID string `json:"fundId,omitempty"`
+	// FundName is the name of the fund involved.
+	FundName string `json:"fundName,omitempty"`
+	// FundShortName is the short name of the fund involved.
+	FundShortName string `json:"fundShortName,omitempty"`
+	// FundClassLabel is the label of the fund class involved.
 	FundClassLabel string `json:"fundClassLabel,omitempty"`
 
-	Asset                string   `json:"asset,omitempty"`
-	Amount               float64  `json:"amount,omitempty"`
-	PostFeeAmount        float64  `json:"postFeeAmount,omitempty"`
-	Units                float64  `json:"units,omitempty"`
-	UnitPrice            *float64 `json:"unitPrice,omitempty"`
-	FeePercentage        float64  `json:"feePercentage,omitempty"`
-	StrokedFeePercentage float64  `json:"strokedFeePercentage,omitempty"`
-	FeeAmount            float64  `json:"feeAmount,omitempty"`
-	RebateFromDate       string   `json:"rebateFromDate,omitempty"`
-	RebateToDate         string   `json:"rebateToDate,omitempty"`
-	Status               string   `json:"status,omitempty"`
+	// Asset is the currency of the transaction.
+	Asset string `json:"asset,omitempty"`
+	// Amount is the gross amount of the transaction.
+	Amount float64 `json:"amount,omitempty"`
+	// PostFeeAmount is the amount after fees are deducted.
+	PostFeeAmount float64 `json:"postFeeAmount,omitempty"`
+	// Units is the number of units involved in the transaction.
+	Units float64 `json:"units,omitempty"`
+	// UnitPrice is the price per unit applied to the transaction.
+	UnitPrice *float64 `json:"unitPrice,omitempty"`
+	// FeePercentage is the fee percentage applied.
+	FeePercentage float64 `json:"feePercentage,omitempty"`
+	// StrokedFeePercentage is the original fee percentage before any discounts.
+	StrokedFeePercentage float64 `json:"strokedFeePercentage,omitempty"`
+	// FeeAmount is the total monetary value of fees charged.
+	FeeAmount float64 `json:"feeAmount,omitempty"`
+	// RebateFromDate is the start date for rebate calculations (if applicable).
+	RebateFromDate string `json:"rebateFromDate,omitempty"`
+	// RebateToDate is the end date for rebate calculations (if applicable).
+	RebateToDate string `json:"rebateToDate,omitempty"`
+	// Status is the current status of the request (e.g., "pending", "completed").
+	Status string `json:"status,omitempty"`
 
-	VoucherCode   *string `json:"voucherCode,omitempty"`
-	ConsentType   *string `json:"consentType,omitempty"`
+	// VoucherCode is the promo code applied to this request.
+	VoucherCode *string `json:"voucherCode,omitempty"`
+	// ConsentType indicates the type of consent given.
+	ConsentType *string `json:"consentType,omitempty"`
+	// ConsentStatus indicates the status of the consent.
 	ConsentStatus *string `json:"consentStatus,omitempty"`
 
+	// CollectionBankAccount is the bank account used for the transaction (if applicable).
 	CollectionBankAccount *BankAccount `json:"collectionBankAccount,omitempty"`
 
+	// CreatedAt is the timestamp when the request was created.
 	CreatedAt string `json:"createdAt,omitempty"`
 }
 
+// ListClientAccountRequestsInput is the input for listing transaction requests.
 type ListClientAccountRequestsInput struct {
-	AccountID string  `json:"accountId,omitempty"`
+	// AccountID is the ID of the account.
+	//
+	// Required.
+	AccountID string `json:"accountId,omitempty"`
+	// RequestID is an optional specific request ID to retrieve.
+	//
+	// Optional.
 	RequestID *string `json:"requestId,omitempty"`
 	// Deprecated: Use FundIDs instead.
-	FundID        *string   `json:"fundId,omitempty"`
-	FundIDs       []*string `json:"fundIds,omitempty"`
-	FromDate      *string   `json:"fromDate,omitempty"`
-	ToDate        *string   `json:"toDate,omitempty"`
-	Types         []*string `json:"types,omitempty"`
-	Statuses      []*string `json:"statuses,omitempty"`
-	Limit         *int      `json:"limit,omitempty"`
-	Offset        *int      `json:"offset,omitempty"`
-	CompletedOnly bool      `json:"completedOnly,omitempty"`
+	//
+	// Optional.
+	FundID *string `json:"fundId,omitempty"`
+	// FundIDs filters requests by specific funds.
+	//
+	// Optional.
+	FundIDs []*string `json:"fundIds,omitempty"`
+	// FromDate filters requests starting from this date.
+	//
+	// Optional.
+	FromDate *string `json:"fromDate,omitempty"`
+	// ToDate filters requests up to this date.
+	//
+	// Optional.
+	ToDate *string `json:"toDate,omitempty"`
+	// Types filters requests by type (e.g., "investment", "redemption").
+	//
+	// Optional.
+	Types []*string `json:"types,omitempty"`
+	// Statuses filters requests by status.
+	//
+	// Optional.
+	Statuses []*string `json:"statuses,omitempty"`
+	// Limit restricts the number of returned records.
+	//
+	// Optional.
+	Limit *int `json:"limit,omitempty"`
+	// Offset determines the starting point for pagination.
+	//
+	// Optional.
+	Offset *int `json:"offset,omitempty"`
+	// CompletedOnly filters for only completed requests.
+	//
+	// Optional. Defaults to false.
+	CompletedOnly bool `json:"completedOnly,omitempty"`
 }
 
+// ListClientAccountRequestsOutput contains the list of transaction requests.
 type ListClientAccountRequestsOutput struct {
+	// Requests is the list of client account requests matching the filter.
 	Requests []ClientAccountRequest `json:"requests"`
 }
 
@@ -976,10 +1214,13 @@ func (c *Client) ListClientAccountRequests(ctx context.Context, input *ListClien
 	return output, err
 }
 
+// ListClientBankAccountsInput is the input for listing bank accounts.
 type ListClientBankAccountsInput struct {
 }
 
+// ListClientBankAccountsOutput contains the list of registered bank accounts.
 type ListClientBankAccountsOutput struct {
+	// BankAccounts is the list of bank accounts.
 	BankAccounts []BankAccount `json:"bankAccounts"`
 }
 
@@ -1004,18 +1245,26 @@ func (c *Client) ListClientBankAccounts(ctx context.Context, input *ListClientBa
 	return output, err
 }
 
+// DisplayCurrency represents a currency option for displaying portfolio values.
 type DisplayCurrency struct {
-	ID       string `json:"id,omitempty"`
-	Label    string `json:"label,omitempty"`
+	// ID is the unique identifier of the currency.
+	ID string `json:"id,omitempty"`
+	// Label is the display name of the currency.
+	Label string `json:"label,omitempty"`
+	// ImageUrl is a URL to the flag or icon of the currency.
 	ImageUrl string `json:"imageUrl,omitempty"`
 }
 
+// ListDisplayCurrenciesInput is the input for listing display currencies.
 type ListDisplayCurrenciesInput struct {
 }
 
+// ListDisplayCurrenciesOutput contains the current setting and available options for display currency.
 type ListDisplayCurrenciesOutput struct {
-	DisplayCurrency string            `json:"displayCurrency,omitempty"`
-	Currencies      []DisplayCurrency `json:"currencies"`
+	// DisplayCurrency is the currently selected display currency for the client.
+	DisplayCurrency string `json:"displayCurrency,omitempty"`
+	// Currencies is the list of all available display currencies.
+	Currencies []DisplayCurrency `json:"currencies"`
 }
 
 // ListDisplayCurrencies lists all available currencies that can be used to display portfolio values and transactions.
@@ -1039,29 +1288,48 @@ func (c *Client) ListDisplayCurrencies(ctx context.Context, input *ListDisplayCu
 	return output, err
 }
 
+// SuitabilityAssessment represents a risk profile assessment record.
 type SuitabilityAssessment struct {
-	ID                   string `json:"id,omitempty"`
-	ClientID             string `json:"clientId,omitempty"`
-	Source               string `json:"source,omitempty"`
+	// ID is the unique identifier of the assessment.
+	ID string `json:"id,omitempty"`
+	// ClientID is the ID of the client who took the assessment.
+	ClientID string `json:"clientId,omitempty"`
+	// Source indicates where the assessment was taken.
+	Source string `json:"source,omitempty"`
+	// InvestmentExperience describes the client's prior experience.
 	InvestmentExperience string `json:"investmentExperience,omitempty"`
-	InvestmentObjective  string `json:"investmentObjective,omitempty"`
-	InvestmentHorizon    string `json:"investmentHorizon,omitempty"`
-	CurrentInvestment    string `json:"currentInvestment,omitempty"`
-	ReturnExpectations   string `json:"returnExpectations,omitempty"`
-	Attachment           string `json:"attachment,omitempty"`
-	TotalScore           int    `json:"totalScore,omitempty"`
-	RiskTolerance        string `json:"riskTolerance,omitempty"`
-	CreatedBy            string `json:"createdBy,omitempty"`
-	CreatedAt            string `json:"createdAt,omitempty"`
+	// InvestmentObjective describes the client's goals.
+	InvestmentObjective string `json:"investmentObjective,omitempty"`
+	// InvestmentHorizon describes how long the client plans to invest.
+	InvestmentHorizon string `json:"investmentHorizon,omitempty"`
+	// CurrentInvestment describes the client's current portfolio status.
+	CurrentInvestment string `json:"currentInvestment,omitempty"`
+	// ReturnExpectations describes what returns the client expects.
+	ReturnExpectations string `json:"returnExpectations,omitempty"`
+	// Attachment refers to any supporting documents uploaded.
+	Attachment string `json:"attachment,omitempty"`
+	// TotalScore is the calculated risk score based on answers.
+	TotalScore int `json:"totalScore,omitempty"`
+	// RiskTolerance is the resulting risk category (e.g., "Aggressive").
+	RiskTolerance string `json:"riskTolerance,omitempty"`
+	// CreatedBy indicates who created the assessment record.
+	CreatedBy string `json:"createdBy,omitempty"`
+	// CreatedAt is the timestamp when the assessment was created.
+	CreatedAt string `json:"createdAt,omitempty"`
 }
 
+// ListClientSuitabilityAssessmentsInput is the input for listing assessments.
 type ListClientSuitabilityAssessmentsInput struct {
 }
 
+// ListClientSuitabilityAssessmentsOutput contains the list of past assessments and status flags.
 type ListClientSuitabilityAssessmentsOutput struct {
-	ShouldAskSuitabilityAssessment bool                    `json:"shouldAskSuitabilityAssessment"`
-	CanIgnoreSuitabilityAssessment bool                    `json:"canIgnoreSuitabilityAssessment"`
-	Assessments                    []SuitabilityAssessment `json:"assessments"`
+	// ShouldAskSuitabilityAssessment reports whether the client needs to take a new assessment.
+	ShouldAskSuitabilityAssessment bool `json:"shouldAskSuitabilityAssessment"`
+	// CanIgnoreSuitabilityAssessment reports whether the client is allowed to bypass the assessment.
+	CanIgnoreSuitabilityAssessment bool `json:"canIgnoreSuitabilityAssessment"`
+	// Assessments is the list of historical suitability assessments.
+	Assessments []SuitabilityAssessment `json:"assessments"`
 }
 
 // ListClientSuitabilityAssessments lists all suitability assessments completed by the client, including risk tolerance evaluations.
@@ -1084,21 +1352,38 @@ func (c *Client) ListClientSuitabilityAssessments(ctx context.Context, input *Li
 	return output, err
 }
 
+// Consent represents a specific agreement or acknowledgment required from the user.
 type Consent struct {
-	Name  string `json:"name,omitempty"`
+	// Name is the internal identifier of the consent.
+	Name string `json:"name,omitempty"`
+	// Label is the display text for the consent checkbox.
 	Label string `json:"label,omitempty"`
 }
 
+// ListInvestConsentsInput is the input for listing consents required for an investment.
 type ListInvestConsentsInput struct {
-	AccountID         string `json:"accountId,omitempty"`
-	FundID            string `json:"fundId,omitempty"`
-	FundClassSequence int    `json:"fundClassSequence,omitempty"`
+	// AccountID is the ID of the account.
+	//
+	// Required.
+	AccountID string `json:"accountId,omitempty"`
+	// FundID is the ID of the fund being invested in.
+	//
+	// Required.
+	FundID string `json:"fundId,omitempty"`
+	// FundClassSequence is the class of the fund.
+	//
+	// Optional. Defaults to 0 if not specified.
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
 }
 
+// ListInvestConsentsOutput contains the list of required consents.
 type ListInvestConsentsOutput struct {
-	Consents        []Consent `json:"consents"`
-	ConsentFundIM   bool      `json:"consentFundIM,omitempty"`
-	ConsentHighRisk bool      `json:"consentHighRisk,omitempty"`
+	// Consents is the list of consent items the user must agree to.
+	Consents []Consent `json:"consents"`
+	// ConsentFundIM is a legacy flag indicating if Information Memorandum consent is needed.
+	ConsentFundIM bool `json:"consentFundIM,omitempty"`
+	// ConsentHighRisk is a legacy flag indicating if High Risk consent is needed.
+	ConsentHighRisk bool `json:"consentHighRisk,omitempty"`
 }
 
 // ListInvestConsents lists the required consent types that must be obtained before making an investment in a specific fund.
@@ -1127,17 +1412,25 @@ func (c *Client) ListInvestConsents(ctx context.Context, input *ListInvestConsen
 	return output, err
 }
 
+// Bank represents a supported banking institution.
 type Bank struct {
-	Name     string `json:"name,omitempty"`
-	Bic      string `json:"bic,omitempty"`
+	// Name is the name of the bank.
+	Name string `json:"name,omitempty"`
+	// Bic is the BIC/SWIFT code of the bank.
+	Bic string `json:"bic,omitempty"`
+	// ImageUrl is a URL to the bank's logo.
 	ImageUrl string `json:"imageUrl,omitempty"`
-	Rank     int    `json:"rank,omitempty"`
+	// Rank is used for sorting the bank list order.
+	Rank int `json:"rank,omitempty"`
 }
 
+// ListBanksInput is the input for listing supported banks.
 type ListBanksInput struct {
 }
 
+// ListBanksOutput contains the list of supported banks.
 type ListBanksOutput struct {
+	// Banks is the list of supported banks.
 	Banks []Bank `json:"banks"`
 }
 
@@ -1162,23 +1455,37 @@ func (c *Client) ListBanks(ctx context.Context, input *ListBanksInput) (output *
 	return output, err
 }
 
+// Promo represents a promotional offer available to the client.
 type Promo struct {
-	AccountID          string  `json:"accountId,omitempty"`
-	AccountName        string  `json:"accountName,omitempty"`
-	Code               string  `json:"code,omitempty"`
-	Label              string  `json:"label,omitempty"`
-	Description        string  `json:"description,omitempty"`
+	// AccountID is the ID of the account eligible for the promo.
+	AccountID string `json:"accountId,omitempty"`
+	// AccountName is the name of the eligible account.
+	AccountName string `json:"accountName,omitempty"`
+	// Code is the promo code string.
+	Code string `json:"code,omitempty"`
+	// Label is the display title of the promo.
+	Label string `json:"label,omitempty"`
+	// Description details the benefits of the promo.
+	Description string `json:"description,omitempty"`
+	// DiscountPercentage is the percentage discount applied by this promo.
 	DiscountPercentage float64 `json:"discountPercentage,omitempty"`
-	DiscountFrom       string  `json:"discountFrom,omitempty"`
-	ValidFromDate      *string `json:"validFromDate,omitempty"`
-	ValidToDate        *string `json:"validToDate,omitempty"`
-	CreatedAt          string  `json:"createdAt,omitempty"`
+	// DiscountFrom specifies what the discount applies to.
+	DiscountFrom string `json:"discountFrom,omitempty"`
+	// ValidFromDate is the start date of the promo validity.
+	ValidFromDate *string `json:"validFromDate,omitempty"`
+	// ValidToDate is the expiration date of the promo.
+	ValidToDate *string `json:"validToDate,omitempty"`
+	// CreatedAt is the timestamp when the promo was created.
+	CreatedAt string `json:"createdAt,omitempty"`
 }
 
+// ListClientPromosInput is the input for listing client promos.
 type ListClientPromosInput struct {
 }
 
+// ListClientPromosOutput contains the list of available promos.
 type ListClientPromosOutput struct {
+	// Promos is the list of available promotions.
 	Promos []Promo `json:"promos"`
 }
 
@@ -1203,19 +1510,35 @@ func (c *Client) ListClientPromos(ctx context.Context, input *ListClientPromosIn
 	return output, err
 }
 
+// ClientAccountPerformance represents a performance metric for an account at a specific time.
 type ClientAccountPerformance struct {
-	Date      string  `json:"date,omitempty"`
-	AccountID string  `json:"accountId,omitempty"`
-	Value     float64 `json:"value,omitempty"`
+	// Date is the timestamp of the performance record.
+	Date string `json:"date,omitempty"`
+	// AccountID is the ID of the account.
+	AccountID string `json:"accountId,omitempty"`
+	// Value is the total value of the account at this date.
+	Value float64 `json:"value,omitempty"`
 }
 
+// ListClientAccountPerformanceInput is the input for listing account performance.
 type ListClientAccountPerformanceInput struct {
+	// AccountIDs filters for specific accounts.
+	//
+	// Required.
 	AccountIDs []string `json:"accountIds,omitempty"`
-	Timeframe  string   `json:"timeframe,omitempty"`
-	Interval   string   `json:"interval,omitempty"`
+	// Timeframe specifies the duration.
+	//
+	// Required.
+	Timeframe string `json:"timeframe,omitempty"`
+	// Interval specifies the data granularity.
+	//
+	// Required.
+	Interval string `json:"interval,omitempty"`
 }
 
+// ListClientAccountPerformanceOutput contains the performance data.
 type ListClientAccountPerformanceOutput struct {
+	// Performance is the list of performance data points.
 	Performance []ClientAccountPerformance `json:"performance,omitempty"`
 }
 
@@ -1245,11 +1568,15 @@ func (c *Client) ListClientAccountPerformance(ctx context.Context, input *ListCl
 	return output, err
 }
 
+// ListPaymentMethodsInput is the input for listing payment methods.
 type ListPaymentMethodsInput struct {
 }
 
+// ListPaymentMethodsOutput contains flags for available payment methods.
 type ListPaymentMethodsOutput struct {
-	Duitnow      bool `json:"duitnow"`
+	// Duitnow reports whether DuitNow payment is available.
+	Duitnow bool `json:"duitnow"`
+	// BankTransfer reports whether manual bank transfer is available.
 	BankTransfer bool `json:"bankTransfer"`
 }
 
@@ -1274,22 +1601,46 @@ func (c *Client) ListPaymentMethods(ctx context.Context, input *ListPaymentMetho
 	return output, err
 }
 
+// GetVoucherInput is the input for checking a voucher code.
 type GetVoucherInput struct {
-	AccountID         string  `json:"accountId,omitempty"`
-	FundID            string  `json:"fundId,omitempty"`
-	FundClassSequence int     `json:"fundClassSequence,omitempty"`
-	Amount            float64 `json:"amount,omitempty"`
-	VoucherCode       *string `json:"voucherCode,omitempty"`
+	// AccountID is the ID of the account used for the investment.
+	//
+	// Required.
+	AccountID string `json:"accountId,omitempty"`
+	// FundID is the ID of the fund.
+	//
+	// Required.
+	FundID string `json:"fundId,omitempty"`
+	// FundClassSequence is the class of the fund.
+	//
+	// Required. Must be greater than 0.
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
+	// Amount is the investment amount.
+	//
+	// Required. Must be greater than 0.
+	Amount float64 `json:"amount,omitempty"`
+	// VoucherCode is the code to validate.
+	//
+	// Optional.
+	VoucherCode *string `json:"voucherCode,omitempty"`
 }
 
+// GetVoucherOutput contains the validation result and fee impact of a voucher.
 type GetVoucherOutput struct {
-	Valid                            bool    `json:"valid"`
-	Code                             string  `json:"code"`
+	// Valid reports whether the voucher code is valid for this transaction.
+	Valid bool `json:"valid"`
+	// Code is the validated voucher code.
+	Code string `json:"code"`
+	// StrokedSubscriptionFeePercentage is the original fee before discount.
 	StrokedSubscriptionFeePercentage float64 `json:"strokedSubscriptionFeePercentage"`
+	// AppliedSubscriptionFeePercentage is the fee after discount.
 	AppliedSubscriptionFeePercentage float64 `json:"appliedSubscriptionFeePercentage"`
-	VoucherDiscountPercentage        float64 `json:"voucherDiscountPercentage"`
-	FeeAmount                        float64 `json:"feeAmount"`
-	PostFeeAmount                    float64 `json:"postFeeAmount"`
+	// VoucherDiscountPercentage is the percentage shaved off the fee.
+	VoucherDiscountPercentage float64 `json:"voucherDiscountPercentage"`
+	// FeeAmount is the monetary value of the final fee.
+	FeeAmount float64 `json:"feeAmount"`
+	// PostFeeAmount is the investment amount minus the fee.
+	PostFeeAmount float64 `json:"postFeeAmount"`
 }
 
 // GetVoucher retrieves details and validates a specific voucher code, calculating the discounted fees for an investment.
@@ -1320,19 +1671,38 @@ func (c *Client) GetVoucher(ctx context.Context, input *GetVoucherInput) (output
 	return output, err
 }
 
+// GetPreviewInvestInput is the input for calculating investment fees.
 type GetPreviewInvestInput struct {
-	AccountID         string  `json:"accountId,omitempty"`
-	FundID            string  `json:"fundId,omitempty"`
-	FundClassSequence int     `json:"fundClassSequence,omitempty"`
-	Amount            float64 `json:"amount,omitempty"`
+	// AccountID is the ID of the account.
+	//
+	// Required.
+	AccountID string `json:"accountId,omitempty"`
+	// FundID is the ID of the fund.
+	//
+	// Required.
+	FundID string `json:"fundId,omitempty"`
+	// FundClassSequence is the class of the fund.
+	//
+	// Required. Must be greater than 0.
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
+	// Amount is the intended investment amount.
+	//
+	// Required. Must be greater than 0.
+	Amount float64 `json:"amount,omitempty"`
 }
 
+// GetPreviewInvestOutput contains the fee calculations for a potential investment.
 type GetPreviewInvestOutput struct {
-	StrokedSubscriptionFeePercentage float64           `json:"strokedSubscriptionFeePercentage"`
-	AppliedSubscriptionFeePercentage float64           `json:"appliedSubscriptionFeePercentage"`
-	PostFeeAmount                    float64           `json:"postFeeAmount"`
-	FeeAmount                        float64           `json:"feeAmount"`
-	DefaultVoucher                   *GetVoucherOutput `json:"defaultVoucher,omitempty"`
+	// StrokedSubscriptionFeePercentage is the standard fee percentage.
+	StrokedSubscriptionFeePercentage float64 `json:"strokedSubscriptionFeePercentage"`
+	// AppliedSubscriptionFeePercentage is the actual fee percentage applied (after defaults).
+	AppliedSubscriptionFeePercentage float64 `json:"appliedSubscriptionFeePercentage"`
+	// PostFeeAmount is the amount that will actually buy units.
+	PostFeeAmount float64 `json:"postFeeAmount"`
+	// FeeAmount is the monetary value of the fees.
+	FeeAmount float64 `json:"feeAmount"`
+	// DefaultVoucher contains details if a voucher was automatically applied.
+	DefaultVoucher *GetVoucherOutput `json:"defaultVoucher,omitempty"`
 }
 
 // GetPreviewInvest calculates a preview of an investment transaction, including applicable fees and any default voucher discounts.
@@ -1362,13 +1732,23 @@ func (c *Client) GetPreviewInvest(ctx context.Context, input *GetPreviewInvestIn
 	return output, err
 }
 
+// GetProjectedFundPriceInput is the input for retrieving projected NAV.
 type GetProjectedFundPriceInput struct {
-	FundID            string `json:"fundId,omitempty"`
-	FundClassSequence int    `json:"fundClassSequence,omitempty"`
+	// FundID is the ID of the fund.
+	//
+	// Required.
+	FundID string `json:"fundId,omitempty"`
+	// FundClassSequence is the class of the fund.
+	//
+	// Required. Must be greater than 0.
+	FundClassSequence int `json:"fundClassSequence,omitempty"`
 }
 
+// GetProjectedFundPriceOutput contains the projected NAV data.
 type GetProjectedFundPriceOutput struct {
-	Asset                string  `json:"asset"`
+	// Asset is the currency of the fund.
+	Asset string `json:"asset"`
+	// NetAssetValuePerUnit is the projected price per unit.
 	NetAssetValuePerUnit float64 `json:"netAssetValuePerUnit"`
 }
 
@@ -1398,23 +1778,39 @@ func (c *Client) GetProjectedFundPrice(ctx context.Context, input *GetProjectedF
 // CreateInvestmentRequestInput represents the payload for creating a new investment request.
 type CreateInvestmentRequestInput struct {
 	// AccountID specifies the identifier of the client account for the investment.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 	// FundID specifies the identifier of the fund to invest in.
+	//
+	// Required.
 	FundID string `json:"fundId,omitempty"`
 	// FundClassSequence specifies the class of the fund to invest in.
+	//
+	// Required. Must be greater than 0.
 	FundClassSequence int `json:"fundClassSequence,omitempty"`
 	// Amount specifies the amount to be invested.
+	//
+	// Required. Must be greater than 0.
 	Amount float64 `json:"amount,omitempty"`
 
 	// ConsentFundIM is deprecated, use Consents instead.
+	//
+	// Required. Value must be true.
 	ConsentFundIM bool `json:"consentFundIM,omitempty"`
 	// ConsentHighRisk is deprecated, use Consents instead.
+	//
+	// Optional.
 	ConsentHighRisk bool `json:"consentHighRisk,omitempty"`
 
 	// Consents specifies a map of consent names to boolean values (true if consented).
+	//
+	// Required.
 	Consents map[string]bool `json:"consents,omitempty"`
 
 	// VoucherCode specifies an optional voucher code to apply to the investment.
+	//
+	// Optional.
 	VoucherCode string `json:"voucherCode,omitempty"`
 }
 
@@ -1461,16 +1857,30 @@ func (c *Client) CreateInvestmentRequest(ctx context.Context, input *CreateInves
 // CreateRedeemRequestInput represents the payload for creating a new redemption (withdrawal) request.
 type CreateRedemptionRequestInput struct {
 	// AccountID specifies the identifier of the client account.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 	// FundID specifies the identifier of the fund to redeem from.
+	//
+	// Required.
 	FundID string `json:"fundId,omitempty"`
 	// FundClassSequence specifies the class of the fund to redeem from.
+	//
+	// Required. Must be greater than 0.
 	FundClassSequence int `json:"fundClassSequence,omitempty"`
 	// RequestedAmount specifies the amount to redeem.
+	//
+	// Optional. Must be greater than 0.
+	// Mutually exclusive with Units (exactly one must be provided).
 	RequestedAmount float64 `json:"requestedAmount,omitempty"`
 	// Units specifies the number of units to redeem.
+	//
+	// Optional. Must be greater than 0.
+	// Mutually exclusive with RequestedAmount (exactly one must be provided).
 	Units float64 `json:"units,omitempty"`
 	// ToBankAccountNumber specifies the bank account number for the redemption proceeds.
+	//
+	// Required.
 	ToBankAccountNumber string `json:"toBankAccountNumber,omitempty"`
 }
 
@@ -1515,20 +1925,36 @@ func (c *Client) CreateRedemptionRequest(ctx context.Context, input *CreateRedem
 // CreateSwitchRequestInput represents the payload for creating a new fund switch request.
 type CreateSwitchRequestInput struct {
 	// AccountID specifies the identifier of the client account.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 
 	// SwitchFromFundID specifies the fund ID to switch units *from*.
+	//
+	// Required.
 	SwitchFromFundID string `json:"switchFromFundId,omitempty"`
 	// SwitchFromFundClassSequence specifies the fund class sequence to switch units *from*.
+	//
+	// Required. Must be greater than 0.
 	SwitchFromFundClassSequence int `json:"switchFromFundClassSequence,omitempty"`
 	// SwitchToFundID specifies the fund ID to switch units *to*.
+	//
+	// Required.
 	SwitchToFundID string `json:"switchToFundId,omitempty"`
 	// SwitchToFundClassSequence specifies the fund class sequence to switch units *to*.
+	//
+	// Required. Must be greater than 0.
 	SwitchToFundClassSequence int `json:"switchToFundClassSequence,omitempty"`
 
 	// RequestedAmount specifies the amount to switch.
+	//
+	// Optional. Must be greater than 0.
+	// Mutually exclusive with Units (exactly one must be provided).
 	RequestedAmount float64 `json:"requestedAmount,omitempty"`
 	// Units specifies the number of units to switch.
+	//
+	// Optional. Must be greater than 0.
+	// Mutually exclusive with RequestedAmount (exactly one must be provided).
 	Units float64 `json:"units,omitempty"`
 }
 
@@ -1574,8 +2000,12 @@ func (c *Client) CreateSwitchRequest(ctx context.Context, input *CreateSwitchReq
 // CreateRequestCancellationInput represents the payload for canceling an existing request.
 type CreateRequestCancellationInput struct {
 	// AccountID specifies the identifier of the client account associated with the request.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 	// RequestID specifies the identifier of the request to cancel.
+	//
+	// Required.
 	RequestID string `json:"requestId,omitempty"`
 }
 
@@ -1612,6 +2042,8 @@ func (c *Client) CreateRequestCancellation(ctx context.Context, input *CreateReq
 // CreateSuitabilityAssessmentInput represents the payload for submitting a new suitability assessment.
 type CreateSuitabilityAssessmentInput struct {
 	// SuitabilityAssessment contains the details of the assessment being submitted.
+	//
+	// Required.
 	SuitabilityAssessment *SuitabilityAssessment `json:"suitabilityAssessment,omitempty"`
 }
 
@@ -1660,6 +2092,8 @@ func (c *Client) CreateSuitabilityAssessment(ctx context.Context, input *CreateS
 // CreateClientBankAccountInput represents the payload for adding a new bank account.
 type CreateClientBankAccountInput struct {
 	// BankAccount contains the details of the bank account to be created.
+	//
+	// Required.
 	BankAccount *BankAccount `json:"bankAccount,omitempty"`
 }
 
@@ -1707,6 +2141,8 @@ func (c *Client) CreateClientBankAccount(ctx context.Context, input *CreateClien
 // UpdateDisplayCurrencyInput represents the payload for changing the client's display currency.
 type UpdateDisplayCurrencyInput struct {
 	// DisplayCurrency specifies the new currency ID to be used for display.
+	//
+	// Required.
 	DisplayCurrency string `json:"displayCurrency,omitempty"`
 }
 
@@ -1741,8 +2177,12 @@ func (c *Client) UpdateDisplayCurrency(ctx context.Context, input *UpdateDisplay
 // UpdateAccountNameInput represents the payload for changing a client account's name.
 type UpdateAccountNameInput struct {
 	// AccountID specifies the ID of the account to update.
+	//
+	// Required.
 	AccountID string `json:"accountId,omitempty"`
 	// AccountName specifies the new name for the account.
+	//
+	// Required. Must be at least 3 characters.
 	AccountName string `json:"accountName,omitempty"`
 }
 
@@ -1778,17 +2218,29 @@ func (c *Client) UpdateAccountName(ctx context.Context, input *UpdateAccountName
 // UpdateClientProfileInput represents the payload for updating specific fields on the client's profile.
 type UpdateClientProfileInput struct {
 	// Ethnicity specifies the client's ethnicity. Value is one of "bumiputera", "chinese", "indian" or "other".
+	//
+	// Optional. If set to "other", OtherEthnicity becomes required.
 	Ethnicity string `json:"ethnicity,omitempty"`
 	// OtherEthnicity is used if Ethnicity is "other" to specify the exact ethnicity.
+	//
+	// Optional. Required if Ethnicity is "other".
 	OtherEthnicity string `json:"otherEthnicity,omitempty"`
 
 	// DomesticRinggitBorrowing specifies the client's domestic ringgit borrowing status.
+	//
+	// Optional.
 	DomesticRinggitBorrowing string `json:"domesticRinggitBorrowing,omitempty"`
 	// TaxResidency specifies the client's tax residency status. Value is one of "onlyMalaysia", "multiple" or "nonMalaysia".
+	//
+	// Optional. Required if TaxResidency is "nonMalaysia" or "multiple".
 	TaxResidency string `json:"taxResidency,omitempty"`
 	// CountryTax specifies the country where the client pays tax.
+	//
+	// Optional. Required if TaxResidency is "nonMalaysia" or "multiple".
 	CountryTax string `json:"countryTax,omitempty"`
 	// TaxIdentificationNo specifies the client's tax account number.
+	//
+	// Optional. Required if TaxResidency is "nonMalaysia" or "multiple".
 	TaxIdentificationNo string `json:"taxIdentificationNo,omitempty"`
 }
 
